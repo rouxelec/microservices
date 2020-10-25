@@ -6,5 +6,6 @@ variable "committer" {
 
 variable "environment" {
     description = "environment"
-    type = string        
+    type = string      
+    default="dev"  
 }
