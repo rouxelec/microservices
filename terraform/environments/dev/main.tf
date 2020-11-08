@@ -16,6 +16,7 @@ module "codebuild" {
   buildspec                   = "src/codebuild/build_base.yaml"
   artifact_type               = "NO_ARTIFACTS"
   private_repository          = "true"
+  build_image                 = "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
 }
 
 provider "aws" {
