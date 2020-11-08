@@ -10,9 +10,12 @@ module "codebuild" {
   cache_expiration_days       = var.cache_expiration_days
   cache_type                  = var.cache_type
   source_credential_token     = var.github_token 
+  github_token                = var.github_token
   source_type                 = "GITHUB"
   source_location             = "https://github.com/rouxelec/fun_project"
   buildspec                   = "src/codebuild/build_base.yaml"
+  artifact_type               = "NO_ARTIFACTS"
+  private_repository          = "true"
 }
 
 provider "aws" {
