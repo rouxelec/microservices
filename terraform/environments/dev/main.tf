@@ -1,10 +1,15 @@
 
+module "s3" {
+  source                  = "../../modules/s3"
+  account_name            = var.account_name
+  project_name            = "fun-project"
+}
 
 module "codebuild" {
   source                      = "../../modules/codebuild"
   namespace                   = var.namespace
   stage                       = var.stage
-  name                        = var.name
+  name                        = "base-img"
   cache_bucket_suffix_enabled = var.cache_bucket_suffix_enabled
   environment_variables       = var.environment_variables
   cache_expiration_days       = var.cache_expiration_days
@@ -18,6 +23,35 @@ module "codebuild" {
   private_repository          = "true"
   build_image                 = "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
   privileged_mode             = true
+}
+
+module "codebuild_app" {
+  source                      = "../../modules/codebuild"
+  namespace                   = var.namespace
+  stage                       = var.stage
+  name                        = "app"
+  cache_bucket_suffix_enabled = var.cache_bucket_suffix_enabled
+  environment_variables       = var.environment_variables
+  cache_expiration_days       = var.cache_expiration_days
+  cache_type                  = var.cache_type
+  source_type                 = "CODEPIPELINE"
+  buildspec                   = "src/codebuild/build_hello_world.yaml"
+  artifact_type               = "CODEPIPELINE"
+  build_image                 = "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
+  privileged_mode             = true
+}
+
+module "codepipeline_base_img" {
+  source                  = "../../modules/codepipeline"
+  codebuild_role_arn      = module.codebuild_app.role_arn
+  codebuild_project_name  = module.codebuild_app.project_name
+  ecr_repo                = "fun_project"
+  github_org              = var.github_org
+  github_project          = "https://github.com/rouxelec/fun_project"
+  github_token            = var.github_token
+  app                     = "base-img"
+  releases_bucket_id      = module.s3.s3_bucket_release_name
+
 }
 
 provider "aws" {

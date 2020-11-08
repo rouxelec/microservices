@@ -13,10 +13,6 @@ variable "stage" {
   description = "Stage, e.g. 'prod', 'staging', 'dev', or 'test'"
 }
 
-variable "name" {
-  type        = string
-  description = "Solution name, e.g. 'app' or 'jenkins'"
-}
 
 variable "environment_variables" {
   type = list(object(
@@ -50,5 +46,17 @@ variable "cache_type" {
 }
 
 variable "github_token" {
+    type = string
+}
+
+variable "github_org" {
+    type = string
+}
+
+variable "account_name" {
+    type = string
+}
+
+variable "ecr_repo" {
     type = string
 }

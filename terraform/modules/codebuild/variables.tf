@@ -168,6 +168,11 @@ variable "artifact_type" {
   description = "The build output artifact's type. Valid values for this parameter are: CODEPIPELINE, NO_ARTIFACTS or S3"
 }
 
+variable "artifact_location" {
+  type        = string
+  default     = ""
+}
+
 variable "report_build_status" {
   type        = bool
   default     = false
