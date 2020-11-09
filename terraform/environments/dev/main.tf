@@ -46,8 +46,8 @@ module "codepipeline_base_img" {
   codebuild_role_arn      = module.codebuild_app.role_arn
   codebuild_project_name  = module.codebuild_app.project_name
   ecr_repo                = "fun_project"
-  github_org              = var.github_org
-  github_project          = "https://github.com/rouxelec/fun_project"
+  github_org              = "https://github.com/rouxelec"
+  github_project          = "fun_project"
   github_token            = var.github_token
   app                     = "base-img"
   releases_bucket_id      = module.s3.s3_bucket_release_name

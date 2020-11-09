@@ -10,18 +10,36 @@ resource "aws_codepipeline" "project" {
   stage {
     name = "Source"
 
+
+
+    action {
+      name             = "Source2"
+      category         = "Source"
+      owner            = "ThirdParty"
+      provider         = "GitHub"
+      version          = "1"
+      output_artifacts = ["${var.app}"]
+
+      configuration = {
+        Owner      = var.github_org
+        Repo       = var.github_project
+        Branch     = "master"
+        OAuthToken = var.github_token
+      }
+    }
+
     action {
       name             = "Source"
       category         = "Source"
       owner            = "AWS"
       provider         = "ECR"
       version          = "1"
-      output_artifacts = ["${var.app}"]
-
+      output_artifacts = ["source_output"]
       configuration = {
         RepositoryName                 = "${var.ecr_repo}"
       }
     }
+    
   }
 
   stage {

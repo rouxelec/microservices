@@ -139,7 +139,8 @@ data "aws_iam_policy_document" "permissions" {
       "secretsmanager:GetSecretValue",
       "ecr:DescribeImages",
       "s3:*",
-      "codebuild:*"
+      "codebuild:*",
+      "ecr:BatchGetImage"
     ], var.extra_permissions))
 
     effect = "Allow"
@@ -222,7 +223,7 @@ resource "aws_codebuild_project" "default" {
       name  = "AWS_REGION"
       value = signum(length(var.aws_region)) == 1 ? var.aws_region : data.aws_region.default.name
     }
-    
+
     environment_variable {
       name  = "AWS_ACCOUNT_ID"
       value = signum(length(var.aws_account_id)) == 1 ? var.aws_account_id : data.aws_caller_identity.default.account_id
