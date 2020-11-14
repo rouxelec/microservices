@@ -5,7 +5,7 @@ FROM python:3
 WORKDIR /usr/src/app
 
 # copy all the files to the container
-COPY * .
+COPY ../../app/* .
 
 # install dependencies
 RUN ls -a
