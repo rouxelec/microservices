@@ -9,7 +9,7 @@ COPY . .
 
 # install dependencies
 RUN ls -a
-RUN pip install --no-cache-dir -r ../../app/requirements.txt
+RUN pip install --no-cache-dir -r src/app/requirements.txt
 
 # tell the port number the container should expose
 EXPOSE 80
