@@ -5,7 +5,7 @@ module "s3" {
   project_name            = "fun-project"
 }
 
-module "codebuild" {
+module "codebuild_base_img" {
   source                      = "../../modules/codebuild"
   namespace                   = var.namespace
   stage                       = var.stage
@@ -41,7 +41,7 @@ module "codebuild_app" {
   privileged_mode             = true
 }
 
-module "codepipeline_base_img" {
+module "codepipeline_app" {
   source                  = "../../modules/codepipeline"
   codebuild_role_arn      = module.codebuild_app.role_arn
   codebuild_project_name  = module.codebuild_app.project_name
@@ -49,7 +49,7 @@ module "codepipeline_base_img" {
   github_org              = "https://github.com/rouxelec"
   github_project          = "fun_project"
   github_token            = var.github_token
-  app                     = "base-img"
+  app                     = "app"
   releases_bucket_id      = module.s3.s3_bucket_release_name
 
 }
