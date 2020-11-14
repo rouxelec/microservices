@@ -54,6 +54,13 @@ module "codepipeline_app" {
 
 }
 
+module "ecr" {
+  source                  = "../../modules/ecr"
+  base_img_name           = "base-img"
+  app_name                = "hello-world"
+}
+
+
 provider "aws" {
   region = var.region
   version = "~> 3.2"
