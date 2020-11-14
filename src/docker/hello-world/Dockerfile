@@ -1,9 +1,17 @@
-FROM 705609561939.dkr.ecr.ca-central-1.amazonaws.com/fun_project
+#FROM 705609561939.dkr.ecr.ca-central-1.amazonaws.com/fun_project
+FROM python:3
 
-ENV PORT=80
+# set a directory for the app
+WORKDIR /usr/src/app
 
-EXPOSE $PORT
+# copy all the files to the container
+COPY . .
 
-COPY app.js /app/
+# install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-CMD ["node", "/app/app.js"]
+# tell the port number the container should expose
+EXPOSE 80
+
+# run the command
+CMD ["python", "../../app/app.py"]

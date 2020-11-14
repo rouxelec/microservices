@@ -124,23 +124,17 @@ data "aws_iam_policy_document" "permissions" {
 
     actions = compact(concat([
       "codecommit:GitPull",
-      "ecr:BatchCheckLayerAvailability",
-      "ecr:CompleteLayerUpload",
-      "ecr:GetAuthorizationToken",
-      "ecr:InitiateLayerUpload",
-      "ecr:PutImage",
-      "ecr:UploadLayerPart",
       "ecs:RunTask",
-      "iam:PassRole",
       "logs:CreateLogGroup",
       "logs:CreateLogStream",
       "logs:PutLogEvents",
+      "iam:PassRole",
       "ssm:GetParameters",
       "secretsmanager:GetSecretValue",
-      "ecr:DescribeImages",
       "s3:*",
       "codebuild:*",
-      "ecr:BatchGetImage"
+      "ecr:*",
+      "codestar-connections:UseConnection"
     ], var.extra_permissions))
 
     effect = "Allow"
