@@ -8,7 +8,8 @@ WORKDIR /usr/src/app
 COPY . .
 
 # install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+RUN ls -a
+RUN pip install --no-cache-dir -r ../../app/requirements.txt
 
 # tell the port number the container should expose
 EXPOSE 80
