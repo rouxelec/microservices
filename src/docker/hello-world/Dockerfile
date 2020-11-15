@@ -1,5 +1,5 @@
 #FROM 705609561939.dkr.ecr.ca-central-1.amazonaws.com/fun_project
-FROM python:3
+FROM python:3.7-alpine
 
 # set a directory for the app
 WORKDIR /app
@@ -8,11 +8,10 @@ WORKDIR /app
 COPY . .
 
 # install dependencies
-RUN pip install flask
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip3 install -r requirements.txt
 
 # tell the port number the container should expose
-EXPOSE 80
+EXPOSE 8000
 
 # run the command
 # CMD ["python", "app.py"]
