@@ -7,5 +7,4 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    url = random.choice(images)
     return "Hello, World!"
