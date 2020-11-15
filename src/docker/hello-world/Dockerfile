@@ -2,7 +2,7 @@
 FROM python:3
 
 # set a directory for the app
-WORKDIR /usr/src/app
+WORKDIR /app
 
 # copy all the files to the container
 COPY . .
@@ -16,4 +16,4 @@ EXPOSE 80
 
 # run the command
 # CMD ["python", "app.py"]
-CMD ["gunicorn", "-w 4", "-b", "0.0.0.0:80", "app:usr/src/app"]
+CMD ["gunicorn", "-w 4", "-b", "0.0.0.0:8000", "helllworld:app"]
