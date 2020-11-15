@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY . .
 
 # install dependencies
-RUN ls -a
+RUN pip install flask
 RUN pip install --no-cache-dir -r requirements.txt
 
 # tell the port number the container should expose
