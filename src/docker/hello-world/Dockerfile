@@ -15,4 +15,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 80
 
 # run the command
-CMD ["python", "../../app/app.py"]
+CMD ["python", "app.py"]
