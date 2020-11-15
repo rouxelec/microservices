@@ -11,8 +11,9 @@ COPY . .
 RUN pip3 install -r requirements.txt
 
 # tell the port number the container should expose
-EXPOSE 8000
+EXPOSE 80
+
+ENTRYPOINT [ "python3" ]
 
 # run the command
-# CMD ["python", "app.py"]
-CMD ["gunicorn", "-w 4", "-b", "0.0.0.0:8000", "helllworld:app"]
+CMD ["app/helloworld.py"]
