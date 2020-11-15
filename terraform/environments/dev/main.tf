@@ -60,6 +60,18 @@ module "ecr" {
   app_name                = "hello-world"
 }
 
+module "vpc" {
+  source = "../../modules/vpc"
+
+  name = "my-vpc"
+  region = "ca-central-1"
+  cidr_block = "10.0.0.0/16"
+  public_subnet_cidr_blocks = ["10.0.0.0/24", "10.0.1.0/24"]
+  availability_zones = ["ca-central-1a", "ca-central-1b"]
+
+  project = var.project_name
+}
+
 
 provider "aws" {
   region = var.region

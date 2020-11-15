@@ -60,3 +60,7 @@ variable "account_name" {
 variable "ecr_repo" {
     type = string
 }
+
+variable "project_name" {
+    type = string
+}
