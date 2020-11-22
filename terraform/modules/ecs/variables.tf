@@ -38,7 +38,7 @@ variable "container_port" {
     type=string
 }
 
-variable "health_check" {
+variable "alb_sg_name" {
     type=string   
 }
 

@@ -1,7 +1,7 @@
 
 
 resource "aws_ecs_cluster" "app" {
-  name = "${var.app}-${var.environment}"
+  name = "${var.app}-${var.environment}-cluster"
   setting {
     name  = "containerInsights"
     value = "enabled"
@@ -21,13 +21,12 @@ resource "aws_ecs_task_definition" "app" {
   family                   = "${var.app}-${var.environment}"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
-  cpu                      = "256"
-  memory                   = "512"
+  cpu                      = "512"
+  memory                   = "1024"
   execution_role_arn       = aws_iam_role.ecsTaskExecutionRole.arn
 
   # defined in role.tf
   task_role_arn = aws_iam_role.app_role.arn
-
   container_definitions = <<DEFINITION
 [
   {
@@ -39,28 +38,6 @@ resource "aws_ecs_task_definition" "app" {
         "protocol": "tcp",
         "containerPort": ${var.container_port},
         "hostPort": ${var.container_port}
-      }
-    ],
-    "environment": [
-      {
-        "name": "PORT",
-        "value": "${var.container_port}"
-      },
-      {
-        "name": "HEALTHCHECK",
-        "value": "${var.health_check}"
-      },
-      {
-        "name": "ENABLE_LOGGING",
-        "value": "false"
-      },
-      {
-        "name": "PRODUCT",
-        "value": "${var.app}"
-      },
-      {
-        "name": "ENVIRONMENT",
-        "value": "${var.environment}"
       }
     ],
     "logConfiguration": {
@@ -86,10 +63,10 @@ resource "aws_security_group" "allow_http" {
 
   ingress {
     description = "HTTP from VPC"
-    from_port   = 80
-    to_port     = 80
+    from_port   = var.container_port
+    to_port     = var.container_port
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    security_groups = [var.alb_sg_name]
   }
 
   egress {
@@ -101,15 +78,17 @@ resource "aws_security_group" "allow_http" {
 }
 
 resource "aws_ecs_service" "app" {
-  name            = "${var.app}-${var.environment}"
+  name            = "${var.app}-${var.environment}-service"
   cluster         = aws_ecs_cluster.app.id
   launch_type     = "FARGATE"
   task_definition = aws_ecs_task_definition.app.arn
   desired_count   = var.replicas
-
+  health_check_grace_period_seconds = 150
+  
   network_configuration {
     security_groups = [aws_security_group.allow_http.id]
     subnets         = var.private_subnets
+    assign_public_ip = true
   }
 
   load_balancer {

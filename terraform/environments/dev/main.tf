@@ -96,7 +96,7 @@ module "ecs" {
   app                         = "hello-world"
   environment                 = "dev"
   container_port              = "5000"
-  health_check                = "5000"
+  alb_sg_name                 = module.alb.alb_sg_name
   region                      = var.region
   logs_retention_in_days      = 14
   tags                        = var.tags
