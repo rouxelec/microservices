@@ -1,4 +1,11 @@
 
+variable "tags" {
+  type = "map"
+
+  default = {
+    "project" = "fun-project"
+  }
+}
 module "s3" {
   source                  = "../../modules/s3"
   account_name            = var.account_name
@@ -60,6 +67,12 @@ module "ecr" {
   app_name                = "hello-world"
 }
 
+module "alb" {
+  source                    = "../../modules/alb"
+  vpc_id                    = module.vpc.id
+  public_subnet_cidr_blocks = module.vpc.public_subnet_ids
+}
+
 module "vpc" {
   source = "../../modules/vpc"
 
@@ -72,6 +85,26 @@ module "vpc" {
   project = var.project_name
 }
 
+
+module "ecs" {
+  source                      = "../../modules/ecs"
+
+  replicas                    = 1
+  container_name              = "hello-world-container"
+  ecs_autoscale_min_instances = 1
+  ecs_autoscale_max_instances = 2
+  app                         = "hello-world"
+  environment                 = "dev"
+  container_port              = "5000"
+  health_check                = "5000"
+  region                      = var.region
+  logs_retention_in_days      = 14
+  tags                        = var.tags
+  private_subnets             = module.vpc.public_subnet_ids
+  vpc_id                      = module.vpc.id
+  target_group_id             = module.alb.target_group_id
+
+}
 
 provider "aws" {
   region = var.region

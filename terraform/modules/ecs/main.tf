@@ -1,26 +1,4 @@
-# How many containers to run
-variable "replicas" {
-  default = "1"
-}
 
-# The name of the container to run
-variable "container_name" {
-  default = "app"
-}
-
-# The minimum number of containers that should be running.
-# Must be at least 1.
-# used by both autoscale-perf.tf and autoscale.time.tf
-# For production, consider using at least "2".
-variable "ecs_autoscale_min_instances" {
-  default = "1"
-}
-
-# The maximum number of containers that should be running.
-# used by both autoscale-perf.tf and autoscale.time.tf
-variable "ecs_autoscale_max_instances" {
-  default = "8"
-}
 
 resource "aws_ecs_cluster" "app" {
   name = "${var.app}-${var.environment}"
@@ -29,17 +7,6 @@ resource "aws_ecs_cluster" "app" {
     value = "enabled"
   }
   tags = var.tags
-}
-
-# The default docker image to deploy with the infrastructure.
-# Note that you can use the fargate CLI for application concerns
-# like deploying actual application images and environment variables
-# on top of the infrastructure provisioned by this template
-# https://github.com/turnerlabs/fargate
-# note that the source for the turner default backend image is here:
-# https://github.com/turnerlabs/turner-defaultbackend
-variable "default_backend_image" {
-  default = "quay.io/turner/turner-defaultbackend:0.2.0"
 }
 
 resource "aws_appautoscaling_target" "app_scale_target" {
@@ -112,6 +79,27 @@ DEFINITION
   tags = var.tags
 }
 
+resource "aws_security_group" "allow_http" {
+  name        = "allow_http_ecs"
+  description = "Allow TLS inbound traffic"
+  vpc_id      = var.vpc_id
+
+  ingress {
+    description = "HTTP from VPC"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
 resource "aws_ecs_service" "app" {
   name            = "${var.app}-${var.environment}"
   cluster         = aws_ecs_cluster.app.id
@@ -120,12 +108,12 @@ resource "aws_ecs_service" "app" {
   desired_count   = var.replicas
 
   network_configuration {
-    security_groups = [aws_security_group.nsg_task.id]
-    subnets         = split(",", var.private_subnets)
+    security_groups = [aws_security_group.allow_http.id]
+    subnets         = var.private_subnets
   }
 
   load_balancer {
-    target_group_arn = aws_alb_target_group.main.id
+    target_group_arn = var.target_group_id
     container_name   = var.container_name
     container_port   = var.container_port
   }
@@ -134,11 +122,6 @@ resource "aws_ecs_service" "app" {
   enable_ecs_managed_tags = true
   propagate_tags          = "SERVICE"
 
-  # workaround for https://github.com/hashicorp/terraform/issues/12634
-  depends_on = [aws_alb_listener.http]
-
-  # [after initial apply] don't override changes made to task_definition
-  # from outside of terraform (i.e.; fargate cli)
   lifecycle {
     ignore_changes = [task_definition]
   }
@@ -166,14 +149,33 @@ resource "aws_iam_role_policy_attachment" "ecsTaskExecutionRole_policy" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
-variable "logs_retention_in_days" {
-  type        = number
-  default     = 90
-  description = "Specifies the number of days you want to retain log events"
-}
-
 resource "aws_cloudwatch_log_group" "logs" {
   name              = "/fargate/service/${var.app}-${var.environment}"
   retention_in_days = var.logs_retention_in_days
   tags              = var.tags
+}
+
+
+resource "aws_iam_role" "app_role" {
+   name               = "${var.app}-${var.environment}"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "ecs-tasks.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+EOF
+
+  tags = {
+    tag-key = "tag-value"
+  }
 }
