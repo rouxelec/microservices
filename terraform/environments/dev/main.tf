@@ -58,6 +58,9 @@ module "codepipeline_app" {
   github_token            = var.github_token
   app                     = "app"
   releases_bucket_id      = module.s3.s3_bucket_release_name
+  ecs_cluster_name        = "hello-world-cluster"
+  service_name            = "hello-world-service"
+
 
 }
 
