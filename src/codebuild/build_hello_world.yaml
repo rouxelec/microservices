@@ -6,7 +6,7 @@ phases:
       - echo Logging in to Amazon ECR...
       - aws --version
       - $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
-      - REPOSITORY_URI=705609561939.dkr.ecr.ca-central-1.amazonaws.com/hello-world
+      - REPOSITORY_URI = $(aws get-parameter --name ecr_app_repo_url)
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
   build:
@@ -21,7 +21,7 @@ phases:
       - echo Pushing the Docker images...
       - docker push $REPOSITORY_URI:latest
       - docker push $REPOSITORY_URI:$IMAGE_TAG
-      - printf '[{"name":"hello-world-container","imageUri":"705609561939.dkr.ecr.ca-central-1.amazonaws.com/hello-world:latest"}]' > imagedefinitions.json
+      - printf '[{"name":"hello-world-container","imageUri":"$REPOSITORY_URI:latest"}]' > imagedefinitions.json
 artifacts:
   files:
     - imagedefinitions.json

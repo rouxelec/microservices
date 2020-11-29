@@ -15,3 +15,9 @@ resource "aws_ecr_repository" "baseimg" {
     scan_on_push = false
   }
 }
+
+resource "aws_ssm_parameter" "ecr_app_repo_url" {
+  name  = "container_name"
+  type  = "String"
+  value = aws_ecr_repository.app.repository_url
+}

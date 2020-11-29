@@ -1,4 +1,10 @@
 
+resource "aws_ssm_parameter" "container_name" {
+  name  = "containername"
+  type  = "String"
+  value = var.container_name
+}
+
 
 resource "aws_ecs_cluster" "app" {
   name = "${var.app}-${var.environment}-cluster"
