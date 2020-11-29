@@ -15,6 +15,12 @@ resource "aws_ecs_cluster" "app" {
   tags = var.tags
 }
 
+resource "aws_ssm_parameter" "aws_ecs_cluster_name" {
+  name  = "ecs_cluster_name"
+  type  = "String"
+  value = aws_ecs_cluster.app.name
+}
+
 resource "aws_appautoscaling_target" "app_scale_target" {
   service_namespace  = "ecs"
   resource_id        = "service/${aws_ecs_cluster.app.name}/${aws_ecs_service.app.name}"
