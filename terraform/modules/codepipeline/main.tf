@@ -51,6 +51,7 @@ resource "aws_codepipeline" "project" {
       owner            = "AWS"
       provider         = "CodeBuild"
       input_artifacts  = ["${var.app}"]
+      output_artifacts = ["imagedefinitions"]
       version          = "1"
 
       configuration = {
