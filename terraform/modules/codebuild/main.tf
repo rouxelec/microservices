@@ -129,7 +129,7 @@ data "aws_iam_policy_document" "permissions" {
       "logs:CreateLogStream",
       "logs:PutLogEvents",
       "iam:PassRole",
-      "ssm:GetParameters",
+      "ssm:*",
       "secretsmanager:GetSecretValue",
       "s3:*",
       "codebuild:*",

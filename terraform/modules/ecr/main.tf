@@ -17,7 +17,7 @@ resource "aws_ecr_repository" "baseimg" {
 }
 
 resource "aws_ssm_parameter" "ecr_app_repo_url" {
-  name  = "container_name"
+  name  = "ecr_app_repo_url"
   type  = "String"
   value = aws_ecr_repository.app.repository_url
 }
