@@ -21,6 +21,7 @@ phases:
       - echo Pushing the Docker images...
       - docker push $REPOSITORY_URI:latest
       - docker push $REPOSITORY_URI:$IMAGE_TAG
+      - printf '{"ImageURI":"image_URI"}'
       - printf '{"ImageURI":"image_URI"}' > imagedefinitions.json
 artifacts:
   files:
