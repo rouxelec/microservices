@@ -134,6 +134,7 @@ data "aws_iam_policy_document" "permissions" {
       "s3:*",
       "codebuild:*",
       "ecr:*",
+      "dynamodb:*",
       "codestar-connections:UseConnection"
     ], var.extra_permissions))
 

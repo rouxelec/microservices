@@ -170,3 +170,28 @@ EOF
     tag-key = "tag-value"
   }
 }
+
+resource "aws_iam_policy" "task-policy" {
+  name        = "task-policy"
+  description = "A task policy"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "dynamodb:*"
+      ],
+      "Effect": "Allow",
+      "Resource": "*"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "test-attach" {
+  role       = aws_iam_role.app_role.name
+  policy_arn = aws_iam_policy.task-policy.arn
+}
