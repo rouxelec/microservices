@@ -95,7 +95,7 @@ resource "aws_ecs_service" "app" {
   launch_type     = "FARGATE"
   task_definition = aws_ecs_task_definition.app.arn
   desired_count   = var.replicas
-  health_check_grace_period_seconds = 150
+  health_check_grace_period_seconds = 300
   
   network_configuration {
     security_groups = [aws_security_group.allow_http.id]
