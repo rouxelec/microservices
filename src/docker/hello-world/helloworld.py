@@ -5,9 +5,12 @@ from flask import Flask
 app = Flask(__name__)
 @app.route("/")
 def hello():
+    dynamodb=None
+    if not dynamodb:
+        dynamodb = boto3.resource('dynamodb')
     try:
       table = dynamodb.Table('GameScores')
-      table.put_item(Item={"UserId":"Francois","Score":1})
+      table.put_item(Item={"UserId":"Francois","Score":10})
     except:
         print("Unexpected error:", sys.exc_info()[0])
         return "Unexpected error:", sys.exc_info()[0]
