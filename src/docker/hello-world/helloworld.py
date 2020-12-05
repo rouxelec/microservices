@@ -3,9 +3,10 @@ import sys
 from flask import Flask
 
 app = Flask(__name__)
-dynamodb=None
+
 @app.route("/")
 def hello():
+    dynamodb=None
     if not dynamodb:
         dynamodb = boto3.resource('dynamodb')
     try:
