@@ -1,3 +1,14 @@
+terraform {
+  backend "s3" {
+    # Replace this with your bucket name!
+    bucket         = "fun-project-terraform-state-francois"
+    key            = "global/s3/terraform.tfstate"
+    region         = "ca-central-1"
+    # Replace this with your DynamoDB table name!
+    dynamodb_table = "fun-project-terraform-state-lock-francois"
+    encrypt        = true
+  }
+}
 
 variable "tags" {
   type = "map"
@@ -108,6 +119,12 @@ module "ecs" {
   target_group_id             = module.alb.target_group_id
 
 }
+
+module "dynamodb" {
+  source                      = "../../modules/dynamodb"
+
+}
+
 
 provider "aws" {
   region = var.region

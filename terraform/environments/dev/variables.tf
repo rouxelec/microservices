@@ -13,6 +13,10 @@ variable "stage" {
   description = "Stage, e.g. 'prod', 'staging', 'dev', or 'test'"
 }
 
+variable "committer" {
+  type        = string
+  description = "committer"
+}
 
 variable "environment_variables" {
   type = list(object(

@@ -81,3 +81,11 @@ resource "aws_codepipeline" "project" {
   
 
 }
+
+resource "null_resource" "update_source" {
+  depends_on  = [aws_codepipeline.project]
+
+  provisioner "local-exec" {
+    command = "echo The server's IP address is "
+  }
+}

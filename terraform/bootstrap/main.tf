@@ -43,10 +43,10 @@ resource "aws_s3_bucket" "terraform_state" {
 resource "aws_dynamodb_table" "terraform_locks" {
     name    =   "fun-project-terraform-state-lock-${var.committer}"
     billing_mode    =   "PAY_PER_REQUEST"
-    hash_key    =   "lockID"
+    hash_key    =   "LockID"
 
     attribute {
-        name    =   "lockID"
+        name    =   "LockID"
         type    =   "S"
     }
 
