@@ -15,9 +15,8 @@ def hello():
         score=response['Item'].get('Score')+1
         print(score)
         table.put_item(Item={"UserId":"Francois","Score":score})
-    except:
-        print("Unexpected error:", sys.exc_info()[0])
-        return sys.exc_info()[0]
+    except Exception as e: 
+        return str(e)
     return "Hello World v6!"
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int("5000"), debug=True)
