@@ -11,9 +11,12 @@ def hello():
         dynamodb = boto3.resource('dynamodb')
     try:
         table = dynamodb.Table('GameScores')
-        table.put_item(Item={"UserId":"Francois","Score":10})
+        response = table.get_item(Key={'UserId': "Francois"})
+        score=response['Item'].get('Score')+1
+        print(score)
+        table.put_item(Item={"UserId":"Francois","Score":score})
     except:
         print("Unexpected error:", sys.exc_info()[0])
-    return "Hello World v5!"
+    return "Hello World v6!"
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int("5000"), debug=True)
