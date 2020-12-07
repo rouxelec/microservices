@@ -14,168 +14,6 @@ module "label" {
   tags       = var.tags
 }
 
-resource "aws_s3_bucket" "cache_bucket" {
-  count         = var.enabled && local.s3_cache_enabled ? 1 : 0
-  bucket        = local.cache_bucket_name_normalised
-  acl           = "private"
-  force_destroy = true
-  tags          = module.label.tags
-
-  lifecycle_rule {
-    id      = "codebuildcache"
-    enabled = true
-
-    prefix = "/"
-    tags   = module.label.tags
-
-    expiration {
-      days = var.cache_expiration_days
-    }
-  }
-}
-
-resource "random_string" "bucket_prefix" {
-  count   = var.enabled ? 1 : 0
-  length  = 12
-  number  = false
-  upper   = false
-  special = false
-  lower   = true
-}
-
-locals {
-  cache_bucket_name = "${module.label.id}${var.cache_bucket_suffix_enabled ? "-${join("", random_string.bucket_prefix.*.result)}" : ""}"
-
-  ## Clean up the bucket name to use only hyphens, and trim its length to 63 characters.
-  ## As per https://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html
-  cache_bucket_name_normalised = substr(
-    join("-", split("_", lower(local.cache_bucket_name))),
-    0,
-    min(length(local.cache_bucket_name), 63),
-  )
-
-  s3_cache_enabled = var.cache_type == "S3"
-
-  ## This is the magic where a map of a list of maps is generated
-  ## and used to conditionally add the cache bucket option to the
-  ## aws_codebuild_project
-  cache_options = {
-    "S3" = {
-      type     = "S3"
-      location = var.enabled && local.s3_cache_enabled ? join("", aws_s3_bucket.cache_bucket.*.bucket) : "none"
-
-    },
-    "LOCAL" = {
-      type  = "LOCAL"
-      modes = var.local_cache_modes
-    },
-    "NO_CACHE" = {
-      type = "NO_CACHE"
-    }
-  }
-
-  # Final Map Selected from above
-  cache = local.cache_options[var.cache_type]
-}
-
-resource "aws_iam_role" "default" {
-  count                 = var.enabled ? 1 : 0
-  name                  = module.label.id
-  assume_role_policy    = data.aws_iam_policy_document.role.json
-  force_detach_policies = true
-}
-
-data "aws_iam_policy_document" "role" {
-  statement {
-    sid = ""
-
-    actions = [
-      "sts:AssumeRole",
-    ]
-
-    principals {
-      type        = "Service"
-      identifiers = ["codebuild.amazonaws.com","codepipeline.amazonaws.com"]
-    }
-
-    effect = "Allow"
-  }
-}
-
-resource "aws_iam_policy" "default" {
-  count  = var.enabled ? 1 : 0
-  name   = module.label.id
-  path   = "/service-role/"
-  policy = data.aws_iam_policy_document.permissions.json
-}
-
-resource "aws_iam_policy" "default_cache_bucket" {
-  count = var.enabled && local.s3_cache_enabled ? 1 : 0
-
-
-  name   = "${module.label.id}-cache-bucket"
-  path   = "/service-role/"
-  policy = join("", data.aws_iam_policy_document.permissions_cache_bucket.*.json)
-}
-
-data "aws_iam_policy_document" "permissions" {
-  statement {
-    sid = ""
-
-    actions = compact(concat([
-      "codecommit:GitPull",
-      "ecs:*",
-      "logs:CreateLogGroup",
-      "logs:CreateLogStream",
-      "logs:PutLogEvents",
-      "iam:PassRole",
-      "ssm:*",
-      "secretsmanager:GetSecretValue",
-      "s3:*",
-      "codebuild:*",
-      "ecr:*",
-      "dynamodb:*",
-      "codestar-connections:UseConnection"
-    ], var.extra_permissions))
-
-    effect = "Allow"
-
-    resources = [
-      "*",
-    ]
-  }
-}
-
-data "aws_iam_policy_document" "permissions_cache_bucket" {
-  count = var.enabled && local.s3_cache_enabled ? 1 : 0
-  statement {
-    sid = ""
-
-    actions = [
-      "s3:*",
-    ]
-
-    effect = "Allow"
-
-    resources = [
-      join("", aws_s3_bucket.cache_bucket.*.arn),
-      "${join("", aws_s3_bucket.cache_bucket.*.arn)}/*",
-    ]
-  }
-}
-
-resource "aws_iam_role_policy_attachment" "default" {
-  count      = var.enabled ? 1 : 0
-  policy_arn = join("", aws_iam_policy.default.*.arn)
-  role       = join("", aws_iam_role.default.*.id)
-}
-
-resource "aws_iam_role_policy_attachment" "default_cache_bucket" {
-  count      = var.enabled && local.s3_cache_enabled ? 1 : 0
-  policy_arn = join("", aws_iam_policy.default_cache_bucket.*.arn)
-  role       = join("", aws_iam_role.default.*.id)
-}
-
 resource "aws_codebuild_source_credential" "authorization" {
   count       = var.enabled && var.private_repository ? 1 : 0
   auth_type   = var.source_credential_auth_type
@@ -186,8 +24,8 @@ resource "aws_codebuild_source_credential" "authorization" {
 
 resource "aws_codebuild_project" "default" {
   count          = var.enabled ? 1 : 0
-  name           = module.label.id
-  service_role   = join("", aws_iam_role.default.*.arn)
+  name           = var.code_build_project_name
+  service_role   = var.code_build_role_arn
   badge_enabled  = var.badge_enabled
   build_timeout  = var.build_timeout
   source_version = var.source_version != "" ? var.source_version : null
@@ -200,12 +38,6 @@ resource "aws_codebuild_project" "default" {
   artifacts {
     type      = var.artifact_type
     location  = var.artifact_location
-  }
-
-  cache {
-    type     = lookup(local.cache, "type", null)
-    location = lookup(local.cache, "location", null)
-    modes    = lookup(local.cache, "modes", null)
   }
 
   environment {

@@ -9,7 +9,7 @@ resource "aws_lb" "front_end_lb" {
 
 }
 
-resource "aws_lb_target_group" "front_end" {
+resource "aws_lb_target_group" "docker-tg" {
   name        = "lb-tg"
   port        = 5000
   protocol    = "HTTP"
@@ -21,14 +21,32 @@ resource "aws_lb_target_group" "front_end" {
   }
 }
 
+resource "aws_lb_target_group" "lambda-tg" {
+  name        = "lambda-lb-tg"
+  target_type = "lambda"
+}
+
 resource "aws_lb_listener" "front_end" {
   load_balancer_arn = aws_lb.front_end_lb.arn
   port              = "80"
   protocol          = "HTTP"
  
   default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.front_end.arn
+    type = "forward"
+    forward {
+      stickiness {
+        duration = 1
+        enabled = false
+      }
+      target_group {
+        arn = aws_lb_target_group.docker-tg.arn
+        weight = 50
+      }
+      target_group {
+        arn    = aws_lb_target_group.lambda-tg.arn
+        weight = 50
+      }
+    }
   }
 }
 

@@ -46,7 +46,7 @@ resource "aws_codepipeline" "project" {
     name = "Build"
 
     action {
-      name             = "Build"
+      name             = "Build_docker_image"
       category         = "Build"
       owner            = "AWS"
       provider         = "CodeBuild"
@@ -55,9 +55,24 @@ resource "aws_codepipeline" "project" {
       version          = "1"
 
       configuration = {
-        ProjectName = "${var.codebuild_project_name}"
+        ProjectName = "${var.codebuild_project_docker}"
       }
     }
+
+    action {
+      name             = "Build_lambda"
+      category         = "Build"
+      owner            = "AWS"
+      provider         = "CodeBuild"
+      input_artifacts  = ["${var.app}"]
+      output_artifacts = ["lambda"]
+      version          = "1"
+
+      configuration = {
+        ProjectName = "${var.codebuild_project_lambda}"
+      }
+    }
+    
   }
 
   stage {
@@ -86,6 +101,6 @@ resource "null_resource" "update_source" {
   depends_on  = [aws_codepipeline.project]
 
   provisioner "local-exec" {
-    command = "echo The server's IP address is "
+    command = "echo test"
   }
 }

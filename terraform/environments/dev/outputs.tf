@@ -10,12 +10,12 @@ output "project_id" {
 
 output "role_id" {
   description = "IAM Role ID"
-  value       = module.codebuild_base_img.role_id
+  value       = module.role.role_id
 }
 
 output "role_arn" {
   description = "IAM Role ARN"
-  value       = module.codebuild_base_img.role_arn
+  value       = module.role.role_arn
 }
 
 output "cache_bucket_name" {
@@ -31,4 +31,20 @@ output "cache_bucket_arn" {
 output "badge_url" {
   description = "The URL of the build badge when badge_enabled is enabled"
   value       = module.codebuild_base_img.badge_url
+}
+
+output "alb_name" {
+  description = "Alb name"
+  value       = module.alb.alb_dns
+}
+
+output "vpc_public_subnets" {
+  description = "vpc public subnets"
+  value       = module.vpc.public_subnet_ids
+}
+
+output "lambda_target_group_arn" {
+  description = "lambda tg arn"
+  value = module.alb.lambda_target_group_arn
+  
 }

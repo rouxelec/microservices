@@ -8,16 +8,6 @@ output "project_id" {
   value       = join("", aws_codebuild_project.default.*.id)
 }
 
-output "role_id" {
-  description = "IAM Role ID"
-  value       = join("", aws_iam_role.default.*.id)
-}
-
-output "role_arn" {
-  description = "IAM Role ARN"
-  value       = join("", aws_iam_role.default.*.arn)
-}
-
 output "cache_bucket_name" {
   description = "Cache S3 bucket name"
   value       = var.enabled && local.s3_cache_enabled ? join("", aws_s3_bucket.cache_bucket.*.bucket) : "UNSET"

@@ -2,7 +2,11 @@ variable codebuild_role_arn {
     type = string
 }
 
-variable codebuild_project_name {
+variable codebuild_project_docker {
+    type = string
+}
+
+variable codebuild_project_lambda {
     type = string
 }
 

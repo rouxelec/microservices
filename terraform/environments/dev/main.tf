@@ -28,10 +28,7 @@ module "codebuild_base_img" {
   namespace                   = var.namespace
   stage                       = var.stage
   name                        = "base-img"
-  cache_bucket_suffix_enabled = var.cache_bucket_suffix_enabled
   environment_variables       = var.environment_variables
-  cache_expiration_days       = var.cache_expiration_days
-  cache_type                  = var.cache_type
   source_credential_token     = var.github_token 
   github_token                = var.github_token
   source_type                 = "GITHUB"
@@ -41,28 +38,45 @@ module "codebuild_base_img" {
   private_repository          = "true"
   build_image                 = "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
   privileged_mode             = true
+  code_build_role_arn         = module.role.role_arn
+    code_build_project_name     = "codebuild_codebase"
 }
 
-module "codebuild_app" {
+module "codebuild_app_docker" {
   source                      = "../../modules/codebuild"
   namespace                   = var.namespace
   stage                       = var.stage
   name                        = "app"
-  cache_bucket_suffix_enabled = var.cache_bucket_suffix_enabled
   environment_variables       = var.environment_variables
-  cache_expiration_days       = var.cache_expiration_days
-  cache_type                  = var.cache_type
   source_type                 = "CODEPIPELINE"
-  buildspec                   = "src/codebuild/build_hello_world.yaml"
+  buildspec                   = "src/codebuild/build_hello_world_docker.yaml"
   artifact_type               = "CODEPIPELINE"
   build_image                 = "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
   privileged_mode             = true
+  code_build_role_arn         = module.role.role_arn
+    code_build_project_name     = "codebuild_app_docker"
+}
+
+module "codebuild_app_lambda" {
+  source                      = "../../modules/codebuild"
+  namespace                   = var.namespace
+  stage                       = var.stage
+  name                        = "app"
+  environment_variables       = var.environment_variables
+  source_type                 = "CODEPIPELINE"
+  buildspec                   = "src/codebuild/build_hello_world_lambda.yaml"
+  artifact_type               = "CODEPIPELINE"
+  build_image                 = "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
+  privileged_mode             = true
+  code_build_role_arn         = module.role.role_arn
+  code_build_project_name     = "codebuild_app_lambda"
 }
 
 module "codepipeline_app" {
   source                  = "../../modules/codepipeline"
-  codebuild_role_arn      = module.codebuild_app.role_arn
-  codebuild_project_name  = module.codebuild_app.project_name
+  codebuild_role_arn      = module.role.role_arn
+  codebuild_project_docker= module.codebuild_app_docker.project_name
+  codebuild_project_lambda= module.codebuild_app_lambda.project_name
   ecr_repo                = "fun_project"
   github_org              = "https://github.com/rouxelec"
   github_project          = "fun_project"
@@ -71,14 +85,17 @@ module "codepipeline_app" {
   releases_bucket_id      = module.s3.s3_bucket_release_name
   ecs_cluster_name        = module.ecs.ecs_cluster_name
   service_name            = module.ecs.ecs_service_name
-
-
 }
 
 module "ecr" {
   source                  = "../../modules/ecr"
   base_img_name           = "base-img"
   app_name                = "hello-world"
+}
+
+module "role" {
+  source = "../../modules/role"
+
 }
 
 module "alb" {
@@ -125,6 +142,10 @@ module "dynamodb" {
 
 }
 
+module "lambda" {
+  source                      = "../../modules/lambda"
+  lambda_target_group_arn     = module.alb.lambda_target_group_arn
+}
 
 provider "aws" {
   region = var.region
