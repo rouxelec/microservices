@@ -6,16 +6,16 @@ phases:
       - echo build lambda helloworld version
       - aws --version
       - $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
-      - echo install terrafrom
+      - echo install terraform
       - $(wget https://releases.hashicorp.com/terraform/0.13.0/terraform_0.13.0_linux_amd64.zip)
+      - cd ../environments/dev/
       - pwd
       - ls
       - $(unzip terraform_0.13.0_linux_amd64.zip) 
   build:
     commands:
       - echo Build started on `date`
-      - echo Building the lambda...
-      - cd ../environments/dev/
+      - echo Building the lambda...      
       - terraform apply -target=module.lambda -auto-approve
   post_build:
     commands:
