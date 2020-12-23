@@ -16,7 +16,7 @@ phases:
     commands:
       - echo Build started on `date`
       - echo Building the lambda...      
-      - terraform apply -target=module.lambda -auto-approve
+      - ./terraform_0.13.0_linux_amd64/terraform apply -target=module.lambda -auto-approve
   post_build:
     commands:
       - echo Build completed on `date`
