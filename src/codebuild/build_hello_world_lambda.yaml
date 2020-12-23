@@ -17,6 +17,7 @@ phases:
     commands:
       - echo Build started on `date`
       - echo Building the lambda...      
+      - ./terraform init
       - ./terraform apply -target=module.lambda -auto-approve
   post_build:
     commands:
