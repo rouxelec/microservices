@@ -1,12 +1,12 @@
 data "archive_file" "lambda_zip" {
     type          = "zip"
-    source_file   = "/home/fr/git_repos/fun_project/src/lambda/helloworld.py"
-    output_path   = "/home/fr/git_repos/fun_project/terraform/temp/helloworld_lambda.zip"
+    source_file   = "../../../src/lambda/helloworld.py"
+    output_path   = "../../../terraform/temp/helloworld_lambda.zip"
 }
 
 resource "aws_lambda_function" "test_lambda" {
-  filename         = "/home/fr/git_repos/fun_project/terraform/temp/helloworld_lambda.zip"
-  function_name    = "helloworld"
+  filename         = "../../../terraform/temp/helloworld_lambda.zip"
+  function_name    = replace("helloworld-${var.namespace}-${var.region}-${var.account_name}-${var.project_name}","_","-")
   role             = "${aws_iam_role.iam_for_lambda_tf.arn}"
   handler          = "helloworld.lambda_handler"
   source_code_hash = "${data.archive_file.lambda_zip.output_base64sha256}"
@@ -14,7 +14,7 @@ resource "aws_lambda_function" "test_lambda" {
 }
 
 resource "aws_iam_role" "iam_for_lambda_tf" {
-  name = "iam_for_lambda_tf"
+  name = replace("lambda-role-${var.namespace}-${var.region}-${var.account_name}-${var.project_name}","_","-")
 
   assume_role_policy = <<EOF
 {
@@ -34,7 +34,7 @@ EOF
 }
 
 resource "aws_iam_policy" "lambda-policy" {
-  name        = "lambda-policy"
+  name        = replace("lambda-policy-${var.namespace}-${var.region}-${var.account_name}-${var.project_name}","_","-")
   description = "A lambda policy"
 
   policy = <<EOF

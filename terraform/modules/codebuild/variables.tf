@@ -5,15 +5,16 @@ variable "namespace" {
   description = "Namespace, which could be your organization name, e.g. 'eg' or 'cp'"
 }
 
-variable "stage" {
-  type        = string
-  default     = ""
-  description = "Stage, e.g. 'prod', 'staging', 'dev', or 'test'"
+variable "project_name" {
+  type        = string  
 }
 
-variable "name" {
-  type        = string
-  description = "Solution name, e.g. 'app' or 'jenkins'"
+variable "account_name" {
+  type        = string  
+}
+
+variable "region" {
+  type        = string  
 }
 
 variable "environment_variables" {

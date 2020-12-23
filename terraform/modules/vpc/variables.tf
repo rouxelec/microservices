@@ -1,29 +1,27 @@
-variable "name" {
-  default     = "Default"
+variable "account_name" {
   type        = string
-  description = "Name of the VPC"
 }
 
-variable "project" {
+variable "project_name" {
   type        = string
   description = "Name of project this VPC is meant to house"
 }
 
+variable "namespace" {
+  type        = string
+}          
 
-variable "region" {
-  default     = "ca-central-1"
+variable "region" {  
   type        = string
   description = "Region of the VPC"
 }
 
-variable "cidr_block" {
-  default     = "10.0.0.0/16"
+variable "cidr_block" {  
   type        = string
   description = "CIDR block for the VPC"
 }
 
 variable "public_subnet_cidr_blocks" {
-  default     = ["10.0.0.0/24", "10.0.2.0/24"]
   type        = list
   description = "List of public subnet CIDR blocks"
 }

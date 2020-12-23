@@ -7,8 +7,6 @@ data "aws_region" "default" {
 module "label" {
   source     = "git::https://github.com/cloudposse/terraform-terraform-label.git?ref=tags/0.5.0"
   namespace  = var.namespace
-  name       = var.name
-  stage      = var.stage
   delimiter  = var.delimiter
   attributes = var.attributes
   tags       = var.tags
@@ -24,7 +22,7 @@ resource "aws_codebuild_source_credential" "authorization" {
 
 resource "aws_codebuild_project" "default" {
   count          = var.enabled ? 1 : 0
-  name           = var.code_build_project_name
+  name           = replace("${var.code_build_project_name}-${var.namespace}-${var.region}-${var.account_name}-${var.project_name}","_","-")
   service_role   = var.code_build_role_arn
   badge_enabled  = var.badge_enabled
   build_timeout  = var.build_timeout
@@ -69,14 +67,6 @@ resource "aws_codebuild_project" "default" {
       content {
         name  = "IMAGE_TAG"
         value = var.image_tag
-      }
-    }
-
-    dynamic "environment_variable" {
-      for_each = signum(length(var.stage)) == 1 ? [""] : []
-      content {
-        name  = "STAGE"
-        value = var.stage
       }
     }
 

@@ -8,16 +8,6 @@ variable "namespace" {
   description = "Namespace, which could be your organization name, e.g. 'eg' or 'cp'"
 }
 
-variable "stage" {
-  type        = string
-  description = "Stage, e.g. 'prod', 'staging', 'dev', or 'test'"
-}
-
-variable "committer" {
-  type        = string
-  description = "committer"
-}
-
 variable "environment_variables" {
   type = list(object(
     {
@@ -61,10 +51,10 @@ variable "account_name" {
     type = string
 }
 
-variable "ecr_repo" {
+variable "project_name" {
     type = string
 }
 
-variable "project_name" {
-    type = string
+variable "availability_zones"{
+    type = list
 }

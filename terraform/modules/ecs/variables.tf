@@ -42,9 +42,23 @@ variable "alb_sg_name" {
     type=string   
 }
 
-variable "region" {
+
+variable account_name {
     type = string
 }
+
+variable project_name {
+    type = string
+}
+
+variable namespace {
+    type = string
+}
+
+variable region {
+    type = string
+}
+
 
 variable "vpc_id" {
     type = string

@@ -10,3 +10,12 @@ variable "enabled" {
   default     = true
   description = "A boolean to enable/disable resource creation"
 }
+
+
+variable project_name {
+    type = string
+}
+
+variable namespace {
+    type = string
+}

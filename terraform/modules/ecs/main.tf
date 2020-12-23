@@ -5,9 +5,8 @@ resource "aws_ssm_parameter" "container_name" {
   value = var.container_name
 }
 
-
 resource "aws_ecs_cluster" "app" {
-  name = "${var.app}-${var.environment}-cluster"
+  name = replace("${var.app}-${var.environment}-${var.namespace}-${var.region}-${var.project_name}-cluster","_","-")
   setting {
     name  = "containerInsights"
     value = "enabled"
@@ -90,7 +89,7 @@ resource "aws_security_group" "allow_http" {
 }
 
 resource "aws_ecs_service" "app" {
-  name            = "${var.app}-${var.environment}-service"
+  name = replace("${var.app}-${var.environment}-${var.namespace}-${var.region}-${var.project_name}-service","_","-")  
   cluster         = aws_ecs_cluster.app.id
   launch_type     = "FARGATE"
   task_definition = aws_ecs_task_definition.app.arn
@@ -120,7 +119,7 @@ resource "aws_ecs_service" "app" {
 
 # https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_execution_IAM_role.html
 resource "aws_iam_role" "ecsTaskExecutionRole" {
-  name               = "${var.app}-${var.environment}-ecs"
+  name = replace("${var.app}-${var.environment}-${var.namespace}-${var.region}-${var.project_name}-ecs-role","_","-")  
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
 }
 
@@ -147,8 +146,8 @@ resource "aws_cloudwatch_log_group" "logs" {
 }
 
 
-resource "aws_iam_role" "app_role" {
-   name               = "${var.app}-${var.environment}"
+resource "aws_iam_role" "app_role" {   
+   name = replace("${var.app}-${var.environment}-${var.namespace}-${var.region}-${var.project_name}-app-role","_","-")
 
   assume_role_policy = <<EOF
 {
@@ -172,7 +171,7 @@ EOF
 }
 
 resource "aws_iam_policy" "task-policy" {
-  name        = "task-policy"
+  name = replace("${var.app}-${var.environment}-${var.namespace}-${var.region}-${var.project_name}-task-policy","_","-")  
   description = "A task policy"
 
   policy = <<EOF

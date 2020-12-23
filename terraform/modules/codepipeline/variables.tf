@@ -42,3 +42,19 @@ variable ecs_cluster_name {
 variable service_name {
     type = string
 }
+
+variable "project_name" {
+  type        = string  
+}
+
+variable "account_name" {
+  type        = string  
+}
+
+variable "region" {
+  type        = string  
+}
+
+variable namespace {
+    type = string
+}

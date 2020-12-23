@@ -5,3 +5,11 @@ variable "vpc_id" {
 variable "public_subnet_cidr_blocks" {
     type=list
 }
+
+variable project_name {
+    type = string
+}
+
+variable namespace {
+    type = string
+}

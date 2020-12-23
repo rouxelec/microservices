@@ -1,5 +1,5 @@
 resource "aws_lb" "front_end_lb" {
-  name               = "lb-tf"
+  name               = replace("${var.namespace}-${var.project_name}","_","-")
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.allow_http.id]
@@ -10,7 +10,7 @@ resource "aws_lb" "front_end_lb" {
 }
 
 resource "aws_lb_target_group" "docker-tg" {
-  name        = "lb-tg"
+  name        = replace("docker-tg-${var.namespace}-${var.project_name}","_","-")
   port        = 5000
   protocol    = "HTTP"
   target_type = "ip"
@@ -22,7 +22,7 @@ resource "aws_lb_target_group" "docker-tg" {
 }
 
 resource "aws_lb_target_group" "lambda-tg" {
-  name        = "lambda-lb-tg"
+  name        = replace("lambda-tg-${var.namespace}-${var.project_name}","_","-")
   target_type = "lambda"
 }
 
@@ -51,8 +51,8 @@ resource "aws_lb_listener" "front_end" {
 }
 
 resource "aws_security_group" "allow_http" {
-  name        = "allow_tls"
-  description = "Allow TLS inbound traffic"
+  name        = replace("allow-http-${var.namespace}-${var.project_name}","_","-")
+  description = "Allow HTTP inbound traffic"
   vpc_id      = var.vpc_id
 
   ingress {

@@ -1,5 +1,5 @@
 resource "aws_codepipeline" "project" {
-  name     = "${var.app}-pipeline"
+  name     = replace("${var.app}-${var.namespace}-${var.region}-${var.account_name}-${var.project_name}-releases","_","-")
   role_arn = var.codebuild_role_arn
 
   artifact_store {
@@ -13,7 +13,7 @@ resource "aws_codepipeline" "project" {
 
 
     action {
-      name             = "Source2"
+      name             = "GitHub_Source"
       category         = "Source"
       owner            = "ThirdParty"
       provider         = "GitHub"
@@ -29,7 +29,7 @@ resource "aws_codepipeline" "project" {
     }
 
     action {
-      name             = "Source"
+      name             = "Base_img_source"
       category         = "Source"
       owner            = "AWS"
       provider         = "ECR"

@@ -48,3 +48,20 @@ output "lambda_target_group_arn" {
   value = module.alb.lambda_target_group_arn
   
 }
+
+output "s3_bucket_release_name" {
+  description = "releases bucket" 
+  value = module.s3.s3_bucket_release_name
+}
+
+output "vpc_id" {
+  value = module.vpc.id
+}
+
+output "ecr_app_repo_url" {
+  value = module.ecr.ecr_app_repo_url
+}
+
+output "ecr_app_repo_name" {
+  value = module.ecr.ecr_app_repo_name
+}

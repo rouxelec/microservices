@@ -5,8 +5,8 @@ resource "aws_vpc" "default" {
 
   tags = merge(
     {
-      Name        = var.name,
-      Project     = var.project
+      Name        = replace("${var.namespace}-${var.region}-${var.account_name}-${var.project_name}","-","_"),
+      Project     = var.project_name
     },
     var.tags
   )
@@ -18,7 +18,7 @@ resource "aws_internet_gateway" "default" {
   tags = merge(
     {
       Name        = "gwInternet",
-      Project     = var.project
+      Project     = var.project_name
     },
     var.tags
   )
@@ -31,7 +31,7 @@ resource "aws_route_table" "public" {
   tags = merge(
     {
       Name        = "PublicRouteTable",
-      Project     = var.project
+      Project     = var.project_name
     },
     var.tags
   )
@@ -55,7 +55,7 @@ resource "aws_subnet" "public" {
   tags = merge(
     {
       Name        = "PublicSubnet",
-      Project     = var.project
+      Project     = var.project_name
     },
     var.tags
   )

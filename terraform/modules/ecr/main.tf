@@ -1,5 +1,5 @@
 resource "aws_ecr_repository" "app" {
-  name                 = var.app_name
+  name                 = replace("${var.app_name}-${var.namespace}-${var.project_name}","_","-")
   image_tag_mutability = "MUTABLE"
 
   image_scanning_configuration {
@@ -8,7 +8,7 @@ resource "aws_ecr_repository" "app" {
 }
 
 resource "aws_ecr_repository" "baseimg" {
-  name                 = var.base_img_name
+  name                 = replace("${var.base_img_name}-${var.namespace}-${var.project_name}","_","-")
   image_tag_mutability = "MUTABLE"
 
   image_scanning_configuration {
