@@ -2,10 +2,9 @@ locals {
     tags = {
         "environment"       =   "dev"
         "technical_contact" =   "francois.rouxel@slalom.com"
-        "tenant_owner"      =   "francois.rouxel@slalom.com"
-        "owner_group"       =   "fun_project"
+        "tenant_owner"      =   "francois.rouxel@slalom.com"        
         "cost_center"       =   "personal"
-        "project"           =   "fun_project"        
+        "project"           =   var.project        
     }   
 }
 
@@ -19,7 +18,7 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "terraform_state" {
-    bucket = "fun-project-terraform-state-${var.committer}"
+    bucket = "${var.region}-${var.project}-terraform-state-${var.committer}-${var.account}"
 
     server_side_encryption_configuration {
         rule {
@@ -41,7 +40,7 @@ resource "aws_s3_bucket" "terraform_state" {
 }
 
 resource "aws_dynamodb_table" "terraform_locks" {
-    name    =   "fun-project-terraform-state-lock-${var.committer}"
+    name    =   "${var.region}-${var.project}-terraform-state-lock-${var.committer}-${var.account}"
     billing_mode    =   "PAY_PER_REQUEST"
     hash_key    =   "LockID"
 
