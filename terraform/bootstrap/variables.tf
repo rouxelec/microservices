@@ -20,5 +20,5 @@ variable "region" {
 
 variable "namespace" {
     type = string
-    default = "training"
+    default = "n1"
 }

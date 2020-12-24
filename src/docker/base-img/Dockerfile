@@ -1,5 +1,6 @@
-FROM alpine:3.8
-
-RUN apk update
-
-RUN apk add nodejs
+FROM python:alpine3.7
+COPY . /app
+WORKDIR /app
+RUN pip install -r requirements.txt
+EXPOSE 5000
+CMD python ./baseimg.py

@@ -66,6 +66,26 @@ module "lambda" {
   region                      = var.region
 }
 
+module "codebuild_base_img" {
+  source                      = "../../modules/codebuild"
+  namespace                   = var.namespace
+  environment_variables       = var.environment_variables
+  source_credential_token     = var.github_token 
+  github_token                = var.github_token
+  source_type                 = "GITHUB"
+  source_location             = "https://github.com/rouxelec/fun_project"
+  buildspec                   = "src/codebuild/build_base.yaml"
+  artifact_type               = "NO_ARTIFACTS"
+  private_repository          = "true"
+  build_image                 = "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
+  privileged_mode             = true
+  code_build_role_arn         = module.role.role_arn
+  code_build_project_name     = "codebuild_codebase"
+  project_name                = var.project_name
+  region                      = var.region
+  account_name                = var.account_name
+}
+
 module "codebuild_app_docker" {
   source                      = "../../modules/codebuild"
   namespace                   = var.namespace  
