@@ -16,6 +16,12 @@ resource "aws_ecr_repository" "baseimg" {
   }
 }
 
+resource "aws_ssm_parameter" "ecr_img_repo_url" {
+  name  = "ecr_img_repo_url"
+  type  = "String"
+  value = aws_ecr_repository.baseimg.repository_url
+}
+
 resource "aws_ssm_parameter" "ecr_app_repo_url" {
   name  = "ecr_app_repo_url"
   type  = "String"
