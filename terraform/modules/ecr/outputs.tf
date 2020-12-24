@@ -12,3 +12,8 @@ output "ecr_app_repo_name" {
   description = "ecr repository_name"
   value       = aws_ecr_repository.app.name
 }
+
+output "ecr_img_repo_name" {
+  description = "ecr baseimg repository_name"
+  value       = aws_ecr_repository.baseimg.name
+}

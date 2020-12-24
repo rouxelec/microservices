@@ -8,10 +8,10 @@ phases:
       - $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
       - echo install terraform
       - cd terraform/environments/dev/
-      - $(wget https://releases.hashicorp.com/terraform/0.13.0/terraform_0.13.0_linux_amd64.zip)
+      - $(wget https://releases.hashicorp.com/terraform/0.13.2/terraform_0.13.2_linux_amd64.zip)
       - pwd
       - ls
-      - unzip ./terraform_0.13.0_linux_amd64.zip
+      - unzip ./terraform_0.13.2_linux_amd64.zip
       - ls
   build:
     commands:

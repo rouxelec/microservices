@@ -127,7 +127,7 @@ module "codepipeline_app" {
   codebuild_role_arn      = module.role.role_arn
   codebuild_project_docker= module.codebuild_app_docker.project_name
   codebuild_project_lambda= module.codebuild_app_lambda.project_name
-  ecr_repo                = module.ecr.ecr_app_repo_name
+  ecr_repo                = module.ecr.ecr_img_repo_name
   github_org              = var.github_org
   github_project          = "fun_project"
   github_token            = var.github_token
@@ -161,7 +161,7 @@ module "ecs" {
   account_name                = var.account_name
   namespace                   = var.namespace
   region                      = var.region
-
+  default_backend_image       = module.ecr.ecr_img_repo_name
 }
 
 

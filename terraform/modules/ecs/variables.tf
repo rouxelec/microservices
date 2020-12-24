@@ -23,7 +23,7 @@ variable "ecs_autoscale_max_instances" {
 }
 
 variable "default_backend_image" {
-  default = "705609561939.dkr.ecr.ca-central-1.amazonaws.com/hello-world"
+
 }
 
 variable "app" {
