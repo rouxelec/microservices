@@ -36,9 +36,10 @@ data "aws_iam_policy_document" "permissions" {
     actions = compact(concat([
       "codecommit:GitPull",
       "ecs:*",
+      "ec2:*",
       "logs:*",
       "lambda:*",
-      "iam:PassRole",
+      "iam:*",
       "ssm:*",
       "secretsmanager:GetSecretValue",
       "s3:*",
