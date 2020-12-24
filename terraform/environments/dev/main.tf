@@ -84,6 +84,7 @@ module "codebuild_base_img" {
   project_name                = var.project_name
   region                      = var.region
   account_name                = var.account_name
+  trigger_enabled             = true
 }
 
 module "codebuild_app_docker" {
@@ -100,6 +101,7 @@ module "codebuild_app_docker" {
   project_name                = var.project_name
   region                      = var.region
   account_name                = var.account_name
+  trigger_enabled             = false
 }
 
 module "codebuild_app_lambda" {
@@ -116,6 +118,7 @@ module "codebuild_app_lambda" {
   project_name                = var.project_name
   region                      = var.region
   account_name                = var.account_name
+  trigger_enabled             = false
 }
 
 module "codepipeline_app" {

@@ -6,7 +6,9 @@ phases:
       - echo Logging in to Amazon ECR...
       - aws --version
       - $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
-      - REPOSITORY_URI=705609561939.dkr.ecr.ca-central-1.amazonaws.com/base-img
+      - REPOSITORY_URI=$(aws ssm get-parameter --name "ecr_img_repo_url" | jq -r '.Parameter.Value')
+      - ECS_CONTAINER_NAME=$(aws ssm get-parameter --name "containername" | jq -r '.Parameter.Value')
+      - echo $REPOSITORY_URI
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=${COMMIT_HASH:=latest}
   build:

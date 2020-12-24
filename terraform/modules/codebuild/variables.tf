@@ -230,3 +230,7 @@ variable "code_build_role_arn" {
 variable "code_build_project_name" {
   
 }
+
+variable trigger_enabled {
+  
+}

@@ -12,6 +12,25 @@ module "label" {
   tags       = var.tags
 }
 
+
+resource "aws_codebuild_webhook" "example" {
+  count          = var.trigger_enabled ? 1 : 0
+  project_name = aws_codebuild_project.default[count.index].name
+
+  filter_group {
+    filter {
+      type    = "EVENT"
+      pattern = "PUSH"
+    }
+
+    filter {
+      type    = "HEAD_REF"
+      pattern = "master"
+    }
+  }
+}
+
+
 resource "aws_codebuild_source_credential" "authorization" {
   count       = var.enabled && var.private_repository ? 1 : 0
   auth_type   = var.source_credential_auth_type
