@@ -7,7 +7,6 @@ phases:
       - aws --version
       - $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
       - REPOSITORY_URI=$(aws ssm get-parameter --name "ecr_app_repo_url" | jq -r '.Parameter.Value')
-      - ECS_CONTAINER_NAME=$(aws ssm get-parameter --name "containername" | jq -r '.Parameter.Value')
       - echo $REPOSITORY_URI
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
