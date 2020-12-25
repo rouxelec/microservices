@@ -1,7 +1,11 @@
 # HOW TO :-) 
+## go to your github account
+### in developer settings, generate a new personal token and update terraform.tfvars with this github token
 ## update terraform.tfvars
 ## make sure the terraform version in build_hello_world_lambda and terraform on your laptop are the same
 ## terraform init
+## terraform apply
+## or 
 ## terraform apply -target module.s3 --auto-approve
 ## terraform apply -target module.vpc --auto-approve
 ## terraform apply -target module.alb --auto-approve
