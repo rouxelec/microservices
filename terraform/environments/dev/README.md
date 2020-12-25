@@ -8,6 +8,7 @@
 ## terraform apply -target module.ecr --auto-approve
 ## terraform apply -target module.lambda --auto-approve
 ## terraform apply -target module.role --auto-approve
+## terraform apply -target module.dynamodb --auto-approve
 ## terraform apply -target module.codebuild_base_img --auto-approve
 ## terraform apply -target module.codebuild_app_lambda --auto-approve
 ## terraform apply -target module.codebuild_app_docker --auto-approve
@@ -20,7 +21,8 @@
 ## terraform destroy -target module.ecr --auto-approve
 ## terraform destroy -target module.lambda --auto-approve
 ## terraform destroy -target module.role --auto-approve
-## terraform destroy  -target module.codebuild_base_img --auto-approve
+## terraform destroy -target module.dynamodb --auto-approve
+## terraform destroy -target module.codebuild_base_img --auto-approve
 ## terraform destroy -target module.codebuild_app_lambda --auto-approve
 ## terraform destroy -target module.codebuild_app_docker --auto-approve
 ## terraform destroy -target module.codepipeline_app --auto-approve

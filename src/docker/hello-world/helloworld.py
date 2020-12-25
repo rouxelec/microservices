@@ -17,7 +17,8 @@ def hello():
         table.put_item(Item={"UserId":"Francois","Score":score})
         response = table.get_item(Key={'UserId': "Francois"})
     except Exception as e: 
-        return str(e)
+        table.put_item(Item={"UserId":"Francois","Score":1})
+        response = table.get_item(Key={'UserId': "Francois"})
     return "Hello World ecs version!   "+response['Item']['UserId']+" : "+str(response['Item']['Score'])
 
 @app.route("/healthcheck")
