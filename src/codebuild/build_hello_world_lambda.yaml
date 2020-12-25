@@ -8,10 +8,10 @@ phases:
       - $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
       - echo install terraform
       - cd terraform/environments/dev/
-      - $(wget https://releases.hashicorp.com/terraform/0.13.2/terraform_0.13.2_linux_amd64.zip)
+      - $(wget https://releases.hashicorp.com/terraform/0.13.5/terraform_0.13.5_linux_amd64.zip)
       - pwd
       - ls
-      - unzip ./terraform_0.13.2_linux_amd64.zip
+      - unzip ./terraform_0.15.2_linux_amd64.zip
       - ls
       - S3_CONFIG_BUCKET=$(aws ssm get-parameter --name "s3_config_bucket" | jq -r '.Parameter.Value')
       - aws s3 cp s3://$S3_CONFIG_BUCKET/terraform.tfvars .
