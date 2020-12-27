@@ -17,3 +17,7 @@ variable namespace {
 variable region {
     type = string
 }
+
+variable terraform_version {
+    type = string
+}

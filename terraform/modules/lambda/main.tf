@@ -82,3 +82,9 @@ resource aws_lb_target_group_attachment lambda_attach {
     aws_lambda_permission.alb
   ]
 }
+
+resource "aws_ssm_parameter" "terraform_version" {
+  name  = "terraform_version"
+  type  = "String"
+  value = var.terraform_version
+}

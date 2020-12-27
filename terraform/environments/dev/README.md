@@ -1,7 +1,7 @@
 # HOW TO :-) 
 ## go to your github account
 ### in developer settings, generate a new personal token and update terraform.tfvars with this github token
-## update terraform.tfvars
+## update terraform.tfvars (default is terraform_version is variables.tf)
 ## make sure the terraform version in build_hello_world_lambda and terraform on your laptop are the same
 ## terraform init
 ## terraform apply

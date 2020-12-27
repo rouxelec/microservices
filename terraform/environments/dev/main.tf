@@ -64,6 +64,7 @@ module "lambda" {
   project_name                = var.project_name
   namespace                   = var.namespace
   region                      = var.region
+  terraform_version           = var.terraform_version
 }
 
 module "codebuild_base_img" {

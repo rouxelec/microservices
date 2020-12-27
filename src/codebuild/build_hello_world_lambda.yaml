@@ -6,12 +6,13 @@ phases:
       - echo build lambda helloworld version
       - aws --version
       - $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
+      - TF_VERSION=$(aws ssm get-parameter --name "terraform_version" | jq -r '.Parameter.Value')
       - echo install terraform
       - cd terraform/environments/dev/
-      - $(wget https://releases.hashicorp.com/terraform/0.13.5/terraform_0.13.5_linux_amd64.zip)
+      - $(wget https://releases.hashicorp.com/terraform/$TF_VERSION/terraform_$TF_VERSION_linux_amd64.zip)
       - pwd
       - ls
-      - unzip ./terraform_0.13.5_linux_amd64.zip
+      - unzip ./terraform_$TF_VERSION_linux_amd64.zip
       - ls
       - S3_CONFIG_BUCKET=$(aws ssm get-parameter --name "s3_config_bucket" | jq -r '.Parameter.Value')
       - aws s3 cp s3://$S3_CONFIG_BUCKET/terraform.tfvars .
