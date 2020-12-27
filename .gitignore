@@ -3,7 +3,8 @@
 *.tfvars
 *.tfstate.backup
 *.tfstate
-**.zip
+*.zip
+*/temp/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
