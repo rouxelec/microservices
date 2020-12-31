@@ -1,1 +1,4 @@
-
+variable "committer" {
+    type = string
+    
+}

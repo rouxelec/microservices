@@ -25,7 +25,7 @@ module "vpc" {
   cidr_block                = "10.0.0.0/16"
   public_subnet_cidr_blocks = ["10.0.0.0/24", "10.0.1.0/24"]
   availability_zones        = var.availability_zones
-
+  committer = var.committer
 }
 
 module "alb" {
@@ -35,13 +35,13 @@ module "alb" {
   public_subnet_cidr_blocks = module.vpc.public_subnet_ids
   project_name            = var.project_name
   namespace               = var.namespace
-
+  committer = var.committer
 }
 
 module "ecr" {
   source                  = "../../modules/ecr"
-  base_img_name           = "base-img"
-  app_name                = "hello-world"
+  base_img_name           = "base-img-${var.committer}"
+  app_name                = "hello-world-${var.committer}"
   project_name            = var.project_name
   namespace               = var.namespace
 }
@@ -50,10 +50,13 @@ module "role" {
   source = "../../modules/role"
   project_name            = var.project_name
   namespace               = var.namespace
+  committer = var.committer
+
 }
 
 module "dynamodb" {
   source                      = "../../modules/dynamodb"
+  committer = var.committer
 }
 
 module "lambda" {
@@ -80,7 +83,7 @@ module "codebuild_base_img" {
   private_repository          = "true"
   build_image                 = "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
   privileged_mode             = true
-  code_build_role_arn         = module.role.role_arn
+  code_build_role_arn         = "arn:aws:iam::881108841750:role/cloudbuild_fun_project_role"
   code_build_project_name     = "codebuild_codebase"
   project_name                = var.project_name
   region                      = var.region
@@ -97,7 +100,7 @@ module "codebuild_app_docker" {
   artifact_type               = "CODEPIPELINE"
   build_image                 = "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
   privileged_mode             = true
-  code_build_role_arn         = module.role.role_arn
+  code_build_role_arn         = "arn:aws:iam::881108841750:role/cloudbuild_fun_project_role"
   code_build_project_name     = "codebuild_app_docker"
   project_name                = var.project_name
   region                      = var.region
@@ -114,7 +117,7 @@ module "codebuild_app_lambda" {
   artifact_type               = "CODEPIPELINE"
   build_image                 = "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
   privileged_mode             = true
-  code_build_role_arn         = module.role.role_arn
+  code_build_role_arn         = "arn:aws:iam::881108841750:role/cloudbuild_fun_project_role"
   code_build_project_name     = "codebuild_app_lambda"
   project_name                = var.project_name
   region                      = var.region
@@ -125,7 +128,7 @@ module "codebuild_app_lambda" {
 module "codepipeline_app" {
   depends_on = [ module.lambda ]
   source                  = "../../modules/codepipeline"
-  codebuild_role_arn      = module.role.role_arn
+  codebuild_role_arn      = "arn:aws:iam::881108841750:role/cloudbuild_fun_project_role"
   codebuild_project_docker= module.codebuild_app_docker.project_name
   codebuild_project_lambda= module.codebuild_app_lambda.project_name
   ecr_repo                = module.ecr.ecr_img_repo_name

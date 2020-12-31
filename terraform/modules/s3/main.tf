@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "releases" {
-  bucket = replace("${var.namespace}-${var.region}-${var.account_name}-${var.project_name}-releases","_","-")
+  bucket = replace("${var.account_name}-${var.project_name}-releases","_","-")
   acl    = "private"                   
 } 
 resource "aws_s3_bucket_public_access_block" "example" {
@@ -10,7 +10,7 @@ resource "aws_s3_bucket_public_access_block" "example" {
 }
 
 resource "aws_s3_bucket" "config" {
-  bucket = replace("${var.namespace}-${var.region}-${var.account_name}-${var.project_name}-config","_","-")
+  bucket = replace("${var.account_name}-${var.project_name}-config","_","-")
   acl    = "private"                   
 } 
 resource "aws_s3_bucket_public_access_block" "config" {

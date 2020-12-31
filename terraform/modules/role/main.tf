@@ -1,6 +1,6 @@
 resource "aws_iam_role" "default" {
   count                 = var.enabled ? 1 : 0
-  name                  = replace("code_build_role-${var.namespace}-${var.project_name}","_","-")
+  name                  = replace("code_build_role-${var.project_name}-${var.committer}","_","-")
   assume_role_policy    = data.aws_iam_policy_document.role.json
   force_detach_policies = true
 }
@@ -24,7 +24,7 @@ data "aws_iam_policy_document" "role" {
 
 resource "aws_iam_policy" "default" {
   count  = var.enabled ? 1 : 0
-  name   = replace("code_build_policy-${var.namespace}-${var.project_name}","_","-")
+  name   = replace("code_build_policy-${var.project_name}-${var.committer}","_","-")
   path   = "/service-role/"
   policy = data.aws_iam_policy_document.permissions.json
 }

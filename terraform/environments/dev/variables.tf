@@ -34,6 +34,11 @@ variable "github_org" {
 
 variable "account_name" {
     type = string
+    
+}
+
+variable "committer" {
+    type = string
 }
 
 variable "project_name" {

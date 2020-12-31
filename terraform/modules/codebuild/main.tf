@@ -12,23 +12,23 @@ module "label" {
   tags       = var.tags
 }
 
+# Done maually
+# resource "aws_codebuild_webhook" "example" {
+#   count          = var.trigger_enabled ? 1 : 0
+#   project_name = aws_codebuild_project.default[count.index].name
 
-resource "aws_codebuild_webhook" "example" {
-  count          = var.trigger_enabled ? 1 : 0
-  project_name = aws_codebuild_project.default[count.index].name
+#   filter_group {
+#     filter {
+#       type    = "EVENT"
+#       pattern = "PUSH"
+#     }
 
-  filter_group {
-    filter {
-      type    = "EVENT"
-      pattern = "PUSH"
-    }
-
-    filter {
-      type    = "HEAD_REF"
-      pattern = "master"
-    }
-  }
-}
+#     filter {
+#       type    = "HEAD_REF"
+#       pattern = "master"
+#     }
+#   }
+# }
 
 
 resource "aws_codebuild_source_credential" "authorization" {
@@ -41,7 +41,7 @@ resource "aws_codebuild_source_credential" "authorization" {
 
 resource "aws_codebuild_project" "default" {
   count          = var.enabled ? 1 : 0
-  name           = replace("${var.code_build_project_name}-${var.namespace}-${var.region}-${var.account_name}-${var.project_name}","_","-")
+  name           = replace("${var.code_build_project_name}-${var.account_name}-${var.project_name}","_","-")
   service_role   = var.code_build_role_arn
   badge_enabled  = var.badge_enabled
   build_timeout  = var.build_timeout

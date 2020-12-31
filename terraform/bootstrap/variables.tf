@@ -8,6 +8,10 @@ variable "account_name" {
     type = string
 }
 
+variable "committer" {
+    type = string
+}
+
 variable "project_name" {
     type = string
     default = "fun-project"
@@ -15,7 +19,7 @@ variable "project_name" {
 
 variable "region" {
     type = string
-    default = "us-east-1"
+    default = "ca-central-1"
 }
 
 variable "namespace" {

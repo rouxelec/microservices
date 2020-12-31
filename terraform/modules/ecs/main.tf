@@ -34,10 +34,10 @@ resource "aws_ecs_task_definition" "app" {
   network_mode             = "awsvpc"
   cpu                      = "512"
   memory                   = "1024"
-  execution_role_arn       = aws_iam_role.ecsTaskExecutionRole.arn
+  execution_role_arn       = "arn:aws:iam::881108841750:role/ECS-fun-project-role"
 
   # defined in role.tf
-  task_role_arn = aws_iam_role.app_role.arn
+  task_role_arn = "arn:aws:iam::881108841750:role/hello-world-fun-project-app-role"
   container_definitions = <<DEFINITION
 [
   {
@@ -118,26 +118,26 @@ resource "aws_ecs_service" "app" {
 }
 
 # https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_execution_IAM_role.html
-resource "aws_iam_role" "ecsTaskExecutionRole" {
-  name = replace("${var.app}-${var.environment}-${var.namespace}-${var.region}-${var.project_name}-ecs-role","_","-")  
-  assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
-}
+# resource "aws_iam_role" "ecsTaskExecutionRole" {
+#   name = replace("${var.app}-${var.environment}-${var.project_name}-ecs-role","_","-")  
+#   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
+# }
 
-data "aws_iam_policy_document" "assume_role_policy" {
-  statement {
-    actions = ["sts:AssumeRole"]
+# data "aws_iam_policy_document" "assume_role_policy" {
+#   statement {
+#     actions = ["sts:AssumeRole"]
 
-    principals {
-      type        = "Service"
-      identifiers = ["ecs-tasks.amazonaws.com"]
-    }
-  }
-}
+#     principals {
+#       type        = "Service"
+#       identifiers = ["ecs-tasks.amazonaws.com"]
+#     }
+#   }
+# }
 
-resource "aws_iam_role_policy_attachment" "ecsTaskExecutionRole_policy" {
-  role       = aws_iam_role.ecsTaskExecutionRole.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
-}
+# resource "aws_iam_role_policy_attachment" "ecsTaskExecutionRole_policy" {
+#   role       = aws_iam_role.ecsTaskExecutionRole.name
+#   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+# }
 
 resource "aws_cloudwatch_log_group" "logs" {
   name              = "/fargate/service/${var.app}-${var.environment}"
@@ -146,51 +146,51 @@ resource "aws_cloudwatch_log_group" "logs" {
 }
 
 
-resource "aws_iam_role" "app_role" {   
-   name = replace("${var.app}-${var.environment}-${var.namespace}-${var.region}-${var.project_name}-app-role","_","-")
+# resource "aws_iam_role" "app_role" {   
+#   name = replace("${var.app}-${var.environment}-${var.project_name}-app-role","_","-")
 
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "sts:AssumeRole",
-      "Principal": {
-        "Service": "ecs-tasks.amazonaws.com"
-      },
-      "Effect": "Allow",
-      "Sid": ""
-    }
-  ]
-}
-EOF
+#   assume_role_policy = <<EOF
+# {
+#   "Version": "2012-10-17",
+#   "Statement": [
+#     {
+#       "Action": "sts:AssumeRole",
+#       "Principal": {
+#         "Service": "ecs-tasks.amazonaws.com"
+#       },
+#       "Effect": "Allow",
+#       "Sid": ""
+#     }
+#   ]
+# }
+# EOF
 
-  tags = {
-    tag-key = "tag-value"
-  }
-}
+#   tags = {
+#     tag-key = "tag-value"
+#   }
+# }
 
-resource "aws_iam_policy" "task-policy" {
-  name = replace("${var.app}-${var.environment}-${var.namespace}-${var.region}-${var.project_name}-task-policy","_","-")  
-  description = "A task policy"
+# resource "aws_iam_policy" "task-policy" {
+#   name = replace("${var.app}-${var.environment}-${var.project_name}-task-policy","_","-")  
+#   description = "A task policy"
 
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": [
-        "dynamodb:*"
-      ],
-      "Effect": "Allow",
-      "Resource": "*"
-    }
-  ]
-}
-EOF
-}
+#   policy = <<EOF
+# {
+#   "Version": "2012-10-17",
+#   "Statement": [
+#     {
+#       "Action": [
+#         "dynamodb:*"
+#       ],
+#       "Effect": "Allow",
+#       "Resource": "*"
+#     }
+#   ]
+# }
+# EOF
+# }
 
-resource "aws_iam_role_policy_attachment" "test-attach" {
-  role       = aws_iam_role.app_role.name
-  policy_arn = aws_iam_policy.task-policy.arn
-}
+# resource "aws_iam_role_policy_attachment" "test-attach" {
+#   role       = aws_iam_role.app_role.name
+#   policy_arn = aws_iam_policy.task-policy.arn
+# }

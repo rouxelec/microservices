@@ -6,57 +6,57 @@ data "archive_file" "lambda_zip" {
 
 resource "aws_lambda_function" "test_lambda" {
   filename         = "../../../terraform/temp/helloworld_lambda.zip"
-  function_name    = replace("helloworld-${var.namespace}-${var.region}-${var.account_name}-${var.project_name}","_","-")
-  role             = "${aws_iam_role.iam_for_lambda_tf.arn}"
+  function_name    = replace("helloworld-${var.account_name}-${var.project_name}","_","-")
+  role             = "arn:aws:iam::881108841750:role/lambda-role-manal-fun-project"
   handler          = "helloworld.lambda_handler"
   source_code_hash = "${data.archive_file.lambda_zip.output_base64sha256}"
   runtime          = "python3.7"
 }
 
-resource "aws_iam_role" "iam_for_lambda_tf" {
-  name = replace("lambda-role-${var.namespace}-${var.region}-${var.account_name}-${var.project_name}","_","-")
+# resource "aws_iam_role" "iam_for_lambda_tf" {
+#   name = replace("lambda-role-${var.account_name}-${var.project_name}","_","-")
 
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "sts:AssumeRole",
-      "Principal": {
-        "Service": "lambda.amazonaws.com"
-      },
-      "Effect": "Allow",
-      "Sid": ""
-    }
-  ]
-}
-EOF
-}
+#   assume_role_policy = <<EOF
+# {
+#   "Version": "2012-10-17",
+#   "Statement": [
+#     {
+#       "Action": "sts:AssumeRole",
+#       "Principal": {
+#         "Service": "lambda.amazonaws.com"
+#       },
+#       "Effect": "Allow",
+#       "Sid": ""
+#     }
+#   ]
+# }
+# EOF
+# }
 
-resource "aws_iam_policy" "lambda-policy" {
-  name        = replace("lambda-policy-${var.namespace}-${var.region}-${var.account_name}-${var.project_name}","_","-")
-  description = "A lambda policy"
+# resource "aws_iam_policy" "lambda-policy" {
+#   name        = replace("lambda-policy-${var.account_name}-${var.project_name}","_","-")
+#   description = "A lambda policy"
 
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": [
-        "dynamodb:*"
-      ],
-      "Effect": "Allow",
-      "Resource": "*"
-    }
-  ]
-}
-EOF
-}
+#   policy = <<EOF
+# {
+#   "Version": "2012-10-17",
+#   "Statement": [
+#     {
+#       "Action": [
+#         "dynamodb:*"
+#       ],
+#       "Effect": "Allow",
+#       "Resource": "*"
+#     }
+#   ]
+# }
+# EOF
+# }
 
-resource "aws_iam_role_policy_attachment" "test-attach" {
-  role       = aws_iam_role.iam_for_lambda_tf.name
-  policy_arn = aws_iam_policy.lambda-policy.arn
-}
+# resource "aws_iam_role_policy_attachment" "test-attach" {
+#   role       = aws_iam_role.iam_for_lambda_tf.name
+#   policy_arn = aws_iam_policy.lambda-policy.arn
+# }
 
 resource aws_lambda_alias helloworld {
   name             = "helloworld"

@@ -19,3 +19,7 @@ variable project_name {
 variable namespace {
     type = string
 }
+
+variable "committer" {
+    type = string
+}

@@ -36,3 +36,7 @@ variable "tags" {
   type        = map(string)
   description = "Extra tags to attach to the VPC resources"
 }
+
+variable "committer" {
+    type = string
+}

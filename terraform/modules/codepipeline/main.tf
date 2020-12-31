@@ -1,5 +1,5 @@
 resource "aws_codepipeline" "project" {
-  name     = replace("${var.app}-${var.namespace}-${var.region}-${var.account_name}-${var.project_name}-releases","_","-")
+  name     = replace("${var.app}-${var.account_name}-${var.project_name}-releases","_","-")
   role_arn = var.codebuild_role_arn
 
   artifact_store {
