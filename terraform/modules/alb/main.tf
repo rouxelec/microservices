@@ -29,6 +29,7 @@ resource "aws_lb_target_group" "lambda-tg" {
 resource "aws_lb_target_group" "lambda-container-tg" {
   name        = replace("lambda-c-tg-${var.namespace}-${var.project_name}","_","-")
   target_type = "lambda"
+  port        = 9000
 }
 
 resource "aws_lb_listener" "front_end" {
