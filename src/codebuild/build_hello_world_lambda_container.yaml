@@ -7,11 +7,11 @@ phases:
       - aws --version
       - $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
       - BASE_IMG_REPO_URI=$(aws ssm get-parameter --name "ecr_img_repo_url" | jq -r '.Parameter.Value')
-      - sed -i "s/{baseimg_repo}/$BASE_IMG_REPO_URI/g" src/docker/hello-world-lambda/Dockerfile
+      - sed -i "s|{baseimg_repo}|$BASE_IMG_REPO_URI|g" src/docker/hello-world-lambda/Dockerfile
       - cat src/docker/hello-world-lambda/Dockerfile
       - REPOSITORY_URI=$(aws ssm get-parameter --name "ecr_appv2_repo_url" | jq -r '.Parameter.Value')
       - echo $REPOSITORY_URI
-      - sed -i "s/module.ecr.ecr_img_repo_url/$REPOSITORY_URI/g" terraform/environments/dev/main.tf
+      - sed -i "s|module.ecr.ecr_img_repo_url|$REPOSITORY_URI|g" terraform/environments/dev/main.tf
       - cat terraform/environments/dev/main.tf
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
