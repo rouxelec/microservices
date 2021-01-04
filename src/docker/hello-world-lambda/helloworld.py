@@ -16,7 +16,7 @@ def lambda_handler(event, context):
         table.put_item(Item={"UserId":"Francois","Score":1})
         response = table.get_item(Key={'UserId': "Francois"})
         
-    result='Hello world from Lambda!'+response["Item"]["UserId"]+' : '+str(response["Item"]["Score"])
+    result='Hello world from Lambda container!'+response["Item"]["UserId"]+' : '+str(response["Item"]["Score"])
     response = {
     "statusCode": 200,
     "statusDescription": "200 OK",
