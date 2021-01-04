@@ -72,6 +72,20 @@ resource "aws_codepipeline" "project" {
         ProjectName = "${var.codebuild_project_lambda}"
       }
     }
+
+    action {
+      name             = "Build_lambda_container"
+      category         = "Build"
+      owner            = "AWS"
+      provider         = "CodeBuild"
+      input_artifacts  = ["${var.app}"]
+      output_artifacts = ["lambda_container"]
+      version          = "1"
+
+      configuration = {
+        ProjectName = "${var.codebuild_project_lambda_container}"
+      }
+    }
     
   }
 

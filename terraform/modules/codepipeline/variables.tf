@@ -10,6 +10,9 @@ variable codebuild_project_lambda {
     type = string
 }
 
+variable codebuild_project_lambda_container {
+    type = string
+}
 
 variable releases_bucket_id {
     type = string

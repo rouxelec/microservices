@@ -1,0 +1,11 @@
+account_name                = ""
+project_name                = "fun_project"
+namespace                   = "n1"
+cache_bucket_suffix_enabled = false
+cache_expiration_days       = 0
+cache_type                  = "NO_CACHE"
+region                      = "us-east-1"
+availability_zones          = ["us-east-1a", "us-east-1b"]
+github_token                = ""
+github_org                  = "https://github.com/rouxelec"
+terraform_version           = "0.13.5"

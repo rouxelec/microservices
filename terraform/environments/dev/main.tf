@@ -67,6 +67,18 @@ module "lambda" {
   terraform_version           = var.terraform_version
 }
 
+module "lambda_container" {
+  depends_on = [ module.alb,module.codebuild_base_img ]
+  source                      = "../../modules/lambda_container"
+  lambda_target_group_arn     = module.alb.lambda_container_target_group_arn
+  account_name                = var.account_name
+  project_name                = var.project_name
+  namespace                   = var.namespace
+  region                      = var.region
+  terraform_version           = var.terraform_version
+  image_uri                   = module.ecr.ecr_img_repo_url
+}
+
 module "codebuild_base_img" {
   source                      = "../../modules/codebuild"
   namespace                   = var.namespace
@@ -87,6 +99,7 @@ module "codebuild_base_img" {
   account_name                = var.account_name
   trigger_enabled             = true
 }
+
 
 module "codebuild_app_docker" {
   source                      = "../../modules/codebuild"
@@ -122,24 +135,41 @@ module "codebuild_app_lambda" {
   trigger_enabled             = false
 }
 
-module "codepipeline_app" {
-  depends_on = [ module.lambda ]
-  source                  = "../../modules/codepipeline"
-  codebuild_role_arn      = module.role.role_arn
-  codebuild_project_docker= module.codebuild_app_docker.project_name
-  codebuild_project_lambda= module.codebuild_app_lambda.project_name
-  ecr_repo                = module.ecr.ecr_img_repo_name
-  github_org              = var.github_org
-  github_project          = "fun_project"
-  github_token            = var.github_token
-  app                     = "hello-world"
-  releases_bucket_id      = module.s3.s3_bucket_release_name
-  ecs_cluster_name        = module.ecs.ecs_cluster_name
-  service_name            = module.ecs.ecs_service_name
+module "codebuild_app_lambda_container" {
+  source                      = "../../modules/codebuild"
+  namespace                   = var.namespace  
+  environment_variables       = var.environment_variables
+  source_type                 = "CODEPIPELINE"
+  buildspec                   = "src/codebuild/build_hello_world_lambda_container.yaml"
+  artifact_type               = "CODEPIPELINE"
+  build_image                 = "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
+  privileged_mode             = true
+  code_build_role_arn         = module.role.role_arn
+  code_build_project_name     = "codebuild_app_lambda_container"
   project_name                = var.project_name
   region                      = var.region
   account_name                = var.account_name
-  namespace                   = var.namespace
+  trigger_enabled             = false
+}
+
+module "codepipeline_app" {
+  source                            = "../../modules/codepipeline"
+  codebuild_role_arn                = module.role.role_arn
+  codebuild_project_docker          = module.codebuild_app_docker.project_name
+  codebuild_project_lambda          = module.codebuild_app_lambda.project_name
+  codebuild_project_lambda_container= module.codebuild_app_lambda_container.project_name
+  ecr_repo                          = module.ecr.ecr_img_repo_name
+  github_org                        = var.github_org
+  github_project                    = "fun_project"
+  github_token                      = var.github_token
+  app                               = "hello-world"
+  releases_bucket_id                = module.s3.s3_bucket_release_name
+  ecs_cluster_name                  = module.ecs.ecs_cluster_name
+  service_name                      = module.ecs.ecs_service_name
+  project_name                      = var.project_name
+  region                            = var.region
+  account_name                      = var.account_name
+  namespace                         = var.namespace
 }
 
 module "ecs" {
@@ -166,8 +196,16 @@ module "ecs" {
 }
 
 
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+      version = "3.22.0"
+    }
+  }
+}  
 
 provider "aws" {
   region = var.region
-  version = "~> 3.2"
+  version = "~> 3.22.0"
 }

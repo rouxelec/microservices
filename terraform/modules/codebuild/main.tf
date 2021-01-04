@@ -162,3 +162,11 @@ resource "aws_codebuild_project" "default" {
     }
   }
 }
+
+resource "null_resource" "launch_base_img" {
+  depends_on  = [aws_codebuild_project.default]
+  count          = var.trigger_enabled ? 1 : 0
+  provisioner "local-exec" {
+    command = "aws codebuild start-build --project-name ${aws_codebuild_project.default[count.index].name} --region ${var.region}"
+  }
+}

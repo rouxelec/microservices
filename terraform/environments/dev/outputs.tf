@@ -56,6 +56,14 @@ output "ecr_app_repo_name" {
   value = module.ecr.ecr_app_repo_name
 }
 
+output "ecr_appv2_repo_url" {
+  value = module.ecr.ecr_app_repo_url
+}
+
+output "ecr_appv2_repo_name" {
+  value = module.ecr.ecr_app_repo_name
+}
+
 output "aws_lambda_function_arn" {
   value = module.lambda.aws_lambda_function_arn
 }

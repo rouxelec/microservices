@@ -9,9 +9,4 @@ resource "aws_dynamodb_table" "score-table" {
     name = "UserId"
     type = "S"
   }
-
-  ttl {
-    attribute_name = "TimeToExist"
-    enabled        = false
-  }
 }

@@ -21,3 +21,7 @@ variable region {
 variable terraform_version {
     type = string
 }
+
+variable image_uri {
+  
+}
