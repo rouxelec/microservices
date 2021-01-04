@@ -48,3 +48,8 @@ variable "terraform_version" {
   type = string
   default = "0.13.5"
 }
+
+variable "repo_uri" {
+  type = string
+  default = "toto"
+}
