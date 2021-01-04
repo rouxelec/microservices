@@ -88,3 +88,9 @@ resource "aws_ssm_parameter" "terraform_version" {
   type  = "String"
   value = var.terraform_version
 }
+
+resource "aws_ssm_parameter" "region" {
+  name  = "region"
+  type  = "String"
+  value = var.region
+}
