@@ -14,16 +14,16 @@ def lambda_handler(event, context):
         response = table.get_item(Key={'UserId': "Francois"})
 
 
-        response = table.update_item(
-        Key={
-            'UserId': "Francois"
-        },
-        UpdateExpression="set Score=Score + :val",
-        ExpressionAttributeValues={
-            ':val': int(1)
-        },
-        ReturnValues="UPDATED_NEW"
-        )
+        # response = table.update_item(
+        # Key={
+        #     'UserId': "Francois"
+        # },
+        # UpdateExpression="set Score=Score + :val",
+        # ExpressionAttributeValues={
+        #     ':val': int(1)
+        # },
+        # ReturnValues="UPDATED_NEW"
+        # )
 
     except Exception as e: 
         table.put_item(Item={"UserId":"Francois","Score":1})
