@@ -11,7 +11,7 @@ def lambda_handler(event, context):
         Key={
             "UserId": "Francois"
         },
-        UpdateExpression="set Score = Score + :val, Score_lambda_c = Score_lambda_c + 1",
+        UpdateExpression="set Score = Score + :val, Score_lambda_c = Score_lambda_c + :val",
         ExpressionAttributeValues={
             ":val": int(1)
         },

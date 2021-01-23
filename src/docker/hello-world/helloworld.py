@@ -15,7 +15,7 @@ def hello():
         Key={
             "UserId": "Francois"
         },
-        UpdateExpression="set Score = Score + :val, Score_lambda_ecs = Score_lambda_ecs + 1",
+        UpdateExpression="set Score = Score + :val, Score_lambda_ecs = Score_lambda_ecs + :val",
         ExpressionAttributeValues={
             ":val": int(1)
         },
