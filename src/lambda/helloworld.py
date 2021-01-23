@@ -7,16 +7,22 @@ def lambda_handler(event, context):
         dynamodb = boto3.resource('dynamodb')
     try:
         table = dynamodb.Table('GameScores')
-        response = table.get_item(Key={'UserId': "Francois"})
-        score=response['Item'].get('Score')+1
-        print(score)
-        table.put_item(Item={"UserId":"Francois","Score":score})
+        response = table.update_item(
+        Key={
+            "UserId": "Francois"
+        },
+        UpdateExpression="set Score = Score + :val",
+        ExpressionAttributeValues={
+            ":val": int(1)
+        },
+        ReturnValues="UPDATED_NEW"
+        )
         response = table.get_item(Key={'UserId': "Francois"})
     except Exception as e: 
         table.put_item(Item={"UserId":"Francois","Score":1})
         response = table.get_item(Key={'UserId': "Francois"})
         
-    result='Hello world from Lambda!'+response["Item"]["UserId"]+' : '+str(response["Item"]["Score"])
+    result='Hello world from Lambda v3!'+response["Item"]["UserId"]+' : '+str(response["Item"]["Score"])
     response = {
     "statusCode": 200,
     "statusDescription": "200 OK",
