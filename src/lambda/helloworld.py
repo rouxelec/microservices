@@ -19,7 +19,7 @@ def lambda_handler(event, context):
         )
         response = table.get_item(Key={'UserId': "Francois"})
     except Exception as e: 
-        table.put_item(Item={"UserId":"Francois","Score":1,"Score_lambda":1,"Score_lambda_c":0,"Score_lambda_ecs":0})
+        table.put_item(Item={"UserId":"Francois","Score":1,"Score_lambda":1,"Score_container":0,"Score_lambda_ecs":0})
         response = table.get_item(Key={'UserId': "Francois"})
         
     result='Hello world from Lambda v3!'+response["Item"]["UserId"]+' : '+str(response["Item"]["Score"])
