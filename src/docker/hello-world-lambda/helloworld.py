@@ -18,7 +18,7 @@ def lambda_handler(event, context):
         Key={
             'UserId': "Francois"
         },
-        UpdateExpression="set Score=Score+1, ScoreLambdaContainer=ScoreLambdaContainer+1
+        UpdateExpression="set Score=Score+1, ScoreLambdaContainer=ScoreLambdaContainer+1"
         ReturnValues="UPDATED_NEW"
         )
 
