@@ -11,6 +11,7 @@ resource "aws_lambda_function" "lambda_runtime" {
   handler          = "helloworld.lambda_handler"
   source_code_hash = "${data.archive_file.lambda_zip.output_base64sha256}"
   runtime          = "python3.7"
+  timeout = 30
 }
 
 resource "aws_iam_role" "iam_for_lambda_tf" {

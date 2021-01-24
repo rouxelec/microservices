@@ -3,6 +3,7 @@ resource "aws_lambda_function" "lambda_container" {
   role             = "${aws_iam_role.iam_for_lambda_tf.arn}"
   image_uri        = "${var.image_uri}:latest"
   package_type     = "Image"
+  timeout = 30
 }
 
 resource "aws_iam_role" "iam_for_lambda_tf" {
