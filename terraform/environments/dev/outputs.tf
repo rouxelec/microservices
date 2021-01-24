@@ -39,9 +39,20 @@ output "lambda_target_group_arn" {
   
 }
 
+output "ec2_target_group_arn" {
+  description = "ec2 tg arn"
+  value = module.alb.ec2_target_group_arn
+  
+}
+
 output "s3_bucket_release_name" {
   description = "releases bucket" 
   value = module.s3.s3_bucket_release_name
+}
+
+output "s3_bucket_config_name" {
+  description = "config bucket" 
+  value = module.s3.s3_bucket_config_name
 }
 
 output "vpc_id" {

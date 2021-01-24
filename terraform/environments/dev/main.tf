@@ -195,6 +195,21 @@ module "ecs" {
   default_backend_image       = module.ecr.ecr_img_repo_name
 }
 
+ module "ec2" {
+   source                         = "../../modules/ec2"
+   vpc_id                         = module.vpc.id
+   subnet_ids                     = module.vpc.public_subnet_ids
+   ami                            = "ami-0be2609ba883822ec"
+   instance_type                  = "t2.micro"
+   asg_threshold                  = "80"
+   target_group                   = module.alb.ec2_target_group_arn
+   configbucket_name              = module.s3.s3_bucket_config_name
+   app_port                       = "5000"
+   project_name                   = var.project_name
+   account_name                   = var.account_name
+   namespace                      = var.namespace
+   region                         = var.region
+   }
 
 terraform {
   required_providers {

@@ -21,6 +21,18 @@ resource "aws_lb_target_group" "docker-tg" {
   }
 }
 
+resource "aws_lb_target_group" "ec2-tg" {
+  name        = replace("ec2-tg-${var.namespace}-${var.project_name}","_","-")
+  port        = 5000
+  protocol    = "HTTP"
+  target_type = "instance"
+  vpc_id      = var.vpc_id
+  health_check {
+    path      = "/healthcheck"
+    port      = 5000
+  }
+}
+
 resource "aws_lb_target_group" "lambda-tg" {
   name        = replace("lambda-tg-${var.namespace}-${var.project_name}","_","-")
   target_type = "lambda"
@@ -46,15 +58,19 @@ resource "aws_lb_listener" "front_end" {
       }
       target_group {
         arn = aws_lb_target_group.docker-tg.arn
-        weight = 33
+        weight = 25
+      }
+        target_group {
+        arn = aws_lb_target_group.ec2-tg.arn
+        weight = 25
       }
       target_group {
         arn    = aws_lb_target_group.lambda-tg.arn
-        weight = 33
+        weight = 25
       }
       target_group {
         arn    = aws_lb_target_group.lambda-container-tg.arn
-        weight = 33
+        weight = 25
       }
     }
   }
