@@ -1,6 +1,14 @@
 import json
 import boto3
 
+from decimal import Decimal
+
+class DecimalEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Decimal):
+            return float(obj)
+        return json.JSONEncoder.default(self, obj)
+
 def lambda_handler(event, context):
     dynamodb=None
     if not dynamodb:
@@ -9,20 +17,20 @@ def lambda_handler(event, context):
         table = dynamodb.Table('GameScores')
         response = table.update_item(
         Key={
-            "UserId": "Francois"
+            "UserId": "classic_lambda"
         },
-        UpdateExpression="set Score = Score + :val, Score_lambda = Score_lambda + :val",
+        UpdateExpression="set Score = Score + :val",
         ExpressionAttributeValues={
             ":val": int(1)
         },
         ReturnValues="UPDATED_NEW"
         )
-        response = table.get_item(Key={'UserId': "Francois"})
+        response = table.get_item(Key={'UserId': "classic_lambda"})
     except Exception as e: 
-        table.put_item(Item={"UserId":"Francois","Score":1,"Score_lambda":1,"Score_container":0,"Score_lambda_ecs":0})
-        response = table.get_item(Key={'UserId': "Francois"})
+        table.put_item(Item={"UserId":"classic_lambda","Score":1})
+        response = table.get_item(Key={'UserId': "classic_lambda"})
         
-    result='Hello world from Lambda v3!'+response["Item"]["UserId"]+' : '+str(response["Item"]["Score"])
+    result='Hello world from classic Lambda!'+json.dumps(response["Item"], indent=4, sort_keys=True,cls=DecimalEncoder)
     response = {
     "statusCode": 200,
     "statusDescription": "200 OK",

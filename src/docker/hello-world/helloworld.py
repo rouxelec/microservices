@@ -2,6 +2,14 @@ import boto3
 import sys
 from flask import Flask
 
+from decimal import Decimal
+
+class DecimalEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Decimal):
+            return float(obj)
+        return json.JSONEncoder.default(self, obj)
+
 app = Flask(__name__)
 
 @app.route("/")
@@ -13,19 +21,19 @@ def hello():
         table = dynamodb.Table('GameScores')
         response = table.update_item(
         Key={
-            "UserId": "Francois"
+            "UserId": "ecs"
         },
-        UpdateExpression="set Score = Score + :val, Score_lambda_ecs = Score_lambda_ecs + :val",
+        UpdateExpression="set Score = Score + :val",
         ExpressionAttributeValues={
             ":val": int(1)
         },
         ReturnValues="UPDATED_NEW"
         )
-        response = table.get_item(Key={'UserId': "Francois"})
+        response = table.get_item(Key={'UserId': "ecs"})
     except Exception as e: 
-        table.put_item(Item={"UserId":"Francois","Score":1,"Score_lambda":0,"Score_container":0,"Score_lambda_ecs":1})
-        response = table.get_item(Key={'UserId': "Francois"})
-    return "Hello World ecs version!   "+response['Item']['UserId']+" : "+str(response['Item']['Score'])
+        table.put_item(Item={"UserId":"ecs","Score":1})
+        response = table.get_item(Key={'UserId': "ecs"})
+    return "Hello World ecs version!   "+json.dumps(response["Item"], indent=4, sort_keys=True,cls=DecimalEncoder)
 
 @app.route("/healthcheck")
 def healthcheck():
