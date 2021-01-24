@@ -11,7 +11,7 @@ def lambda_handler(event, context):
         Key={
             "UserId": "Francois"
         },
-        UpdateExpression="set Score = Score + :val",
+        UpdateExpression="set Score = Score + :val, Score_container = Score_container + :val",
         ExpressionAttributeValues={
             ":val": int(1)
         },
@@ -22,7 +22,7 @@ def lambda_handler(event, context):
         table.put_item(Item={"UserId":"Francois","Score":1,"Score_lambda":0,"Score_container":1,"Score_lambda_ecs":0})
         response = table.get_item(Key={'UserId': "Francois"})
         
-    result='Hello world 2 from Lambda container :) !'+response["Item"]["UserId"]+' : '+str(response["Item"]["Score"])
+    result='Hello world from Lambda container :) !'+response["Item"]["UserId"]+' : '+str(response["Item"]["Score"])
     response = {
     "statusCode": 200,
     "statusDescription": "200 OK",
