@@ -1,15 +1,15 @@
 variable "vpc_id" {
-    type=string
+  type = string
 }
 
 variable "public_subnet_cidr_blocks" {
-    type=list
+  type = list
 }
 
 variable project_name {
-    type = string
+  type = string
 }
 
 variable namespace {
-    type = string
+  type = string
 }

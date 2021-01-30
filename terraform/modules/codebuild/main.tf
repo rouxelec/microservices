@@ -14,7 +14,7 @@ module "label" {
 
 
 resource "aws_codebuild_webhook" "example" {
-  count          = var.trigger_enabled ? 1 : 0
+  count        = var.trigger_enabled ? 1 : 0
   project_name = aws_codebuild_project.default[count.index].name
 
   filter_group {
@@ -41,7 +41,7 @@ resource "aws_codebuild_source_credential" "authorization" {
 
 resource "aws_codebuild_project" "default" {
   count          = var.enabled ? 1 : 0
-  name           = replace("${var.code_build_project_name}-${var.namespace}-${var.region}-${var.account_name}-${var.project_name}","_","-")
+  name           = replace("${var.code_build_project_name}-${var.namespace}-${var.region}-${var.account_name}-${var.project_name}", "_", "-")
   service_role   = var.code_build_role_arn
   badge_enabled  = var.badge_enabled
   build_timeout  = var.build_timeout
@@ -53,8 +53,8 @@ resource "aws_codebuild_project" "default" {
   }
 
   artifacts {
-    type      = var.artifact_type
-    location  = var.artifact_location
+    type     = var.artifact_type
+    location = var.artifact_location
   }
 
   environment {
@@ -164,8 +164,8 @@ resource "aws_codebuild_project" "default" {
 }
 
 resource "null_resource" "launch_base_img" {
-  depends_on  = [aws_codebuild_project.default]
-  count          = var.trigger_enabled ? 1 : 0
+  depends_on = [aws_codebuild_project.default]
+  count      = var.trigger_enabled ? 1 : 0
   provisioner "local-exec" {
     command = "aws codebuild start-build --project-name ${aws_codebuild_project.default[count.index].name} --region ${var.region}"
   }

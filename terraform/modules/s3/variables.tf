@@ -1,16 +1,16 @@
 
 variable account_name {
-    type = string
+  type = string
 }
 
 variable project_name {
-    type = string
+  type = string
 }
 
 variable namespace {
-    type = string
+  type = string
 }
 
 variable region {
-    type = string
+  type = string
 }

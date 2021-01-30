@@ -25,31 +25,31 @@ variable "environment_variables" {
 }
 
 variable "github_token" {
-    type = string
+  type = string
 }
 
 variable "github_org" {
-    type = string
+  type = string
 }
 
 variable "account_name" {
-    type = string
+  type = string
 }
 
 variable "project_name" {
-    type = string
+  type = string
 }
 
-variable "availability_zones"{
-    type = list
+variable "availability_zones" {
+  type = list
 }
 
 variable "terraform_version" {
-  type = string
+  type    = string
   default = "0.13.5"
 }
 
 variable "repo_uri" {
-  type = string
+  type    = string
   default = "toto"
 }

@@ -35,24 +35,24 @@ output "vpc_public_subnets" {
 
 output "lambda_target_group_arn" {
   description = "lambda tg arn"
-  value = module.alb.lambda_target_group_arn
-  
+  value       = module.alb.lambda_target_group_arn
+
 }
 
 output "ec2_target_group_arn" {
   description = "ec2 tg arn"
-  value = module.alb.ec2_target_group_arn
-  
+  value       = module.alb.ec2_target_group_arn
+
 }
 
 output "s3_bucket_release_name" {
-  description = "releases bucket" 
-  value = module.s3.s3_bucket_release_name
+  description = "releases bucket"
+  value       = module.s3.s3_bucket_release_name
 }
 
 output "s3_bucket_config_name" {
-  description = "config bucket" 
-  value = module.s3.s3_bucket_config_name
+  description = "config bucket"
+  value       = module.s3.s3_bucket_config_name
 }
 
 output "vpc_id" {
@@ -80,9 +80,9 @@ output "aws_lambda_function_arn" {
 }
 
 output "aws_lambda_function_name" {
-    value = module.lambda.aws_lambda_function_name
+  value = module.lambda.aws_lambda_function_name
 }
 
 output "aws_lambda_function_alias" {
-    value = module.lambda.aws_lambda_function_alias
+  value = module.lambda.aws_lambda_function_alias
 }

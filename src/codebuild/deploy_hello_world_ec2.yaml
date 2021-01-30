@@ -1,0 +1,16 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo deploy ec2 helloworld version
+      - aws --version
+  build:
+    commands:
+      - echo Deploy started on `date`
+      - echo scaling out the ASG...
+      - ASG_NAME=$(aws ssm get-parameter --name "asg_name" | jq -r '.Parameter.Value')
+      - aws autoscaling update-auto-scaling-group --auto-scaling-group-name $ASG_NAME --desired-capacity 2
+  post_build:
+    commands:
+      - echo Build completed on `date`

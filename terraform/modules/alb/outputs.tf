@@ -19,16 +19,16 @@ output "lambda_container_target_group_arn" {
 }
 
 output "alb_dns" {
-  description = "dns_name of alb" 
+  description = "dns_name of alb"
   value       = aws_lb.front_end_lb.dns_name
 }
 
 output "alb_sg_name" {
-  description = "name of the sg alb" 
+  description = "name of the sg alb"
   value       = aws_security_group.allow_http.id
 }
 
 output "alb_id" {
-  description = "dns_name of alb" 
+  description = "dns_name of alb"
   value       = aws_lb.front_end_lb.id
 }

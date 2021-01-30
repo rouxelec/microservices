@@ -1,5 +1,5 @@
 resource "aws_iam_role" "iam_for_ec2_tf" {
-  name = replace("ec2-role-${var.namespace}-${var.region}-${var.account_name}-${var.project_name}","_","-")
+  name = replace("ec2-role-${var.namespace}-${var.region}-${var.account_name}-${var.project_name}", "_", "-")
 
   assume_role_policy = <<EOF
 {
@@ -19,7 +19,7 @@ EOF
 }
 
 resource "aws_iam_policy" "ec2-policy" {
-  name        = replace("ec2-policy-${var.namespace}-${var.region}-${var.account_name}-${var.project_name}","_","-")
+  name        = replace("ec2-policy-${var.namespace}-${var.region}-${var.account_name}-${var.project_name}", "_", "-")
   description = "A ec2 policy"
 
   policy = <<EOF
@@ -53,7 +53,7 @@ resource "aws_iam_instance_profile" "ec2_profile" {
 resource "aws_security_group" "allow_http" {
   name        = "allow_http"
   description = "Allow HTTP inbound connections"
-  vpc_id = var.vpc_id
+  vpc_id      = var.vpc_id
 
   ingress {
     from_port   = var.app_port
@@ -63,10 +63,10 @@ resource "aws_security_group" "allow_http" {
   }
 
   egress {
-    from_port       = 0
-    to_port         = 0
-    protocol        = "-1"
-    cidr_blocks     = ["0.0.0.0/0"]
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   tags = {
@@ -77,13 +77,13 @@ resource "aws_security_group" "allow_http" {
 resource "aws_launch_configuration" "web" {
   name_prefix = "web-"
 
-  image_id = var.ami
+  image_id      = var.ami
   instance_type = var.instance_type
-  key_name = "test_ec2"
+  key_name      = "test_ec2"
 
-  security_groups = [ aws_security_group.allow_http.id ]
+  security_groups             = [aws_security_group.allow_http.id]
   associate_public_ip_address = true
-  iam_instance_profile = aws_iam_instance_profile.ec2_profile.name
+  iam_instance_profile        = aws_iam_instance_profile.ec2_profile.name
 
   user_data = <<USER_DATA
 #!/bin/bash
@@ -108,65 +108,65 @@ python3 ./helloworld.py
 }
 
 resource "aws_autoscaling_policy" "web_policy_up" {
-  name = "web_policy_up"
-  scaling_adjustment = 1
-  adjustment_type = "ChangeInCapacity"
-  cooldown = 300
+  name                   = "web_policy_up"
+  scaling_adjustment     = 1
+  adjustment_type        = "ChangeInCapacity"
+  cooldown               = 300
   autoscaling_group_name = aws_autoscaling_group.web.name
 }
 
 resource "aws_cloudwatch_metric_alarm" "web_cpu_alarm_up" {
-  alarm_name = "web_cpu_alarm_up"
+  alarm_name          = "web_cpu_alarm_up"
   comparison_operator = "GreaterThanOrEqualToThreshold"
-  evaluation_periods = "2"
-  metric_name = "CPUUtilization"
-  namespace = "AWS/EC2"
-  period = "120"
-  statistic = "Average"
-  threshold = var.asg_threshold
+  evaluation_periods  = "2"
+  metric_name         = "CPUUtilization"
+  namespace           = "AWS/EC2"
+  period              = "120"
+  statistic           = "Average"
+  threshold           = var.asg_threshold
 
   dimensions = {
     AutoScalingGroupName = aws_autoscaling_group.web.name
   }
 
   alarm_description = "This metric monitor EC2 instance CPU utilization"
-  alarm_actions = [ aws_autoscaling_policy.web_policy_up.arn ]
+  alarm_actions     = [aws_autoscaling_policy.web_policy_up.arn]
 }
 
 resource "aws_autoscaling_policy" "web_policy_down" {
-  name = "web_policy_down"
-  scaling_adjustment = -1
-  adjustment_type = "ChangeInCapacity"
-  cooldown = 300
+  name                   = "web_policy_down"
+  scaling_adjustment     = -1
+  adjustment_type        = "ChangeInCapacity"
+  cooldown               = 300
   autoscaling_group_name = aws_autoscaling_group.web.name
 }
 
 resource "aws_cloudwatch_metric_alarm" "web_cpu_alarm_down" {
-  alarm_name = "web_cpu_alarm_down"
+  alarm_name          = "web_cpu_alarm_down"
   comparison_operator = "LessThanOrEqualToThreshold"
-  evaluation_periods = "2"
-  metric_name = "CPUUtilization"
-  namespace = "AWS/EC2"
-  period = "120"
-  statistic = "Average"
-  threshold = "10"
+  evaluation_periods  = "2"
+  metric_name         = "CPUUtilization"
+  namespace           = "AWS/EC2"
+  period              = "120"
+  statistic           = "Average"
+  threshold           = "10"
 
   dimensions = {
     AutoScalingGroupName = aws_autoscaling_group.web.name
   }
 
   alarm_description = "This metric monitor EC2 instance CPU utilization"
-  alarm_actions = [ aws_autoscaling_policy.web_policy_down.arn ]
+  alarm_actions     = [aws_autoscaling_policy.web_policy_down.arn]
 }
 
 resource "aws_autoscaling_group" "web" {
   name = "${aws_launch_configuration.web.name}-asg"
 
-  min_size             = 1
-  desired_capacity     = var.desired_capacity
-  max_size             = 4
-  
-  health_check_type    = "ELB"
+  min_size         = 1
+  desired_capacity = var.desired_capacity
+  max_size         = 4
+
+  health_check_type = "ELB"
   target_group_arns = [
     var.target_group
   ]
@@ -183,7 +183,7 @@ resource "aws_autoscaling_group" "web" {
 
   metrics_granularity = "1Minute"
 
-  vpc_zone_identifier  = var.subnet_ids
+  vpc_zone_identifier = var.subnet_ids
 
   # Required to redeploy without an outage.
   lifecycle {
@@ -197,3 +197,9 @@ resource "aws_autoscaling_group" "web" {
   }
 
 }
+
+resource "aws_ssm_parameter" "ecr_img_repo_url" {
+    name  = "asg_name"
+    type  = "String"
+    value = aws_autoscaling_group.web.name
+  }

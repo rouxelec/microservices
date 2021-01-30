@@ -6,7 +6,7 @@ resource "aws_ssm_parameter" "container_name" {
 }
 
 resource "aws_ecs_cluster" "app" {
-  name = replace("${var.app}-${var.environment}-${var.namespace}-${var.region}-${var.project_name}-cluster","_","-")
+  name = replace("${var.app}-${var.environment}-${var.namespace}-${var.region}-${var.project_name}-cluster", "_", "-")
   setting {
     name  = "containerInsights"
     value = "enabled"
@@ -37,7 +37,7 @@ resource "aws_ecs_task_definition" "app" {
   execution_role_arn       = aws_iam_role.ecsTaskExecutionRole.arn
 
   # defined in role.tf
-  task_role_arn = aws_iam_role.app_role.arn
+  task_role_arn         = aws_iam_role.app_role.arn
   container_definitions = <<DEFINITION
 [
   {
@@ -73,10 +73,10 @@ resource "aws_security_group" "allow_http" {
   vpc_id      = var.vpc_id
 
   ingress {
-    description = "HTTP from VPC"
-    from_port   = var.container_port
-    to_port     = var.container_port
-    protocol    = "tcp"
+    description     = "HTTP from VPC"
+    from_port       = var.container_port
+    to_port         = var.container_port
+    protocol        = "tcp"
     security_groups = [var.alb_sg_name]
   }
 
@@ -89,16 +89,16 @@ resource "aws_security_group" "allow_http" {
 }
 
 resource "aws_ecs_service" "app" {
-  name = replace("${var.app}-${var.environment}-${var.namespace}-${var.region}-${var.project_name}-service","_","-")  
-  cluster         = aws_ecs_cluster.app.id
-  launch_type     = "FARGATE"
-  task_definition = aws_ecs_task_definition.app.arn
-  desired_count   = var.replicas
+  name                              = replace("${var.app}-${var.environment}-${var.namespace}-${var.region}-${var.project_name}-service", "_", "-")
+  cluster                           = aws_ecs_cluster.app.id
+  launch_type                       = "FARGATE"
+  task_definition                   = aws_ecs_task_definition.app.arn
+  desired_count                     = var.replicas
   health_check_grace_period_seconds = 300
-  
+
   network_configuration {
-    security_groups = [aws_security_group.allow_http.id]
-    subnets         = var.private_subnets
+    security_groups  = [aws_security_group.allow_http.id]
+    subnets          = var.private_subnets
     assign_public_ip = true
   }
 
@@ -119,7 +119,7 @@ resource "aws_ecs_service" "app" {
 
 # https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_execution_IAM_role.html
 resource "aws_iam_role" "ecsTaskExecutionRole" {
-  name = replace("${var.app}-${var.environment}-${var.namespace}-${var.region}-${var.project_name}-ecs-role","_","-")  
+  name               = replace("${var.app}-${var.environment}-${var.namespace}-${var.region}-${var.project_name}-ecs-role", "_", "-")
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
 }
 
@@ -146,8 +146,8 @@ resource "aws_cloudwatch_log_group" "logs" {
 }
 
 
-resource "aws_iam_role" "app_role" {   
-   name = replace("${var.app}-${var.environment}-${var.namespace}-${var.region}-${var.project_name}-app-role","_","-")
+resource "aws_iam_role" "app_role" {
+  name = replace("${var.app}-${var.environment}-${var.namespace}-${var.region}-${var.project_name}-app-role", "_", "-")
 
   assume_role_policy = <<EOF
 {
@@ -171,7 +171,7 @@ EOF
 }
 
 resource "aws_iam_policy" "task-policy" {
-  name = replace("${var.app}-${var.environment}-${var.namespace}-${var.region}-${var.project_name}-task-policy","_","-")  
+  name        = replace("${var.app}-${var.environment}-${var.namespace}-${var.region}-${var.project_name}-task-policy", "_", "-")
   description = "A task policy"
 
   policy = <<EOF

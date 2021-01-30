@@ -27,55 +27,55 @@ variable "default_backend_image" {
 }
 
 variable "app" {
-    type = string
+  type = string
 }
 
 variable "environment" {
-    type = string
+  type = string
 }
 
 variable "container_port" {
-    type=string
+  type = string
 }
 
 variable "alb_sg_name" {
-    type=string   
+  type = string
 }
 
 
 variable account_name {
-    type = string
+  type = string
 }
 
 variable project_name {
-    type = string
+  type = string
 }
 
 variable namespace {
-    type = string
+  type = string
 }
 
 variable region {
-    type = string
+  type = string
 }
 
 
 variable "vpc_id" {
-    type = string
+  type = string
 }
 
 variable "target_group_id" {
-    type = string
+  type = string
 }
 
 variable "logs_retention_in_days" {
-    default=1
+  default = 1
 }
 
 variable "tags" {
-    type=map
+  type = map
 }
 
 variable "private_subnets" {
-    type=list
+  type = list
 }

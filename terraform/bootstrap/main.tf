@@ -1,42 +1,42 @@
 locals {
-    tags = {
-        "environment"       =   "dev"
-        "technical_contact" =   "francois.rouxel@slalom.com"
-        "tenant_owner"      =   "francois.rouxel@slalom.com"        
-        "cost_center"       =   "personal"
-        "project"           =   var.project_name       
-    }   
+  tags = {
+    "environment"       = "dev"
+    "technical_contact" = "francois.rouxel@slalom.com"
+    "tenant_owner"      = "francois.rouxel@slalom.com"
+    "cost_center"       = "personal"
+    "project"           = var.project_name
+  }
 }
 
-terraform{
-    required_version=">= 0.12, <= 0.14"
+terraform {
+  required_version = ">= 0.12, <= 0.14"
 }
 
 provider "aws" {
-    region = var.region
-    version = "~> 3.2"
+  region  = var.region
+  version = "~> 3.2"
 }
 
 resource "aws_s3_bucket" "terraform_state" {
-    bucket = "${var.namespace}-${var.region}-${var.account_name}-${var.project_name}-terraform-state"
+  bucket = "${var.namespace}-${var.region}-${var.account_name}-${var.project_name}-terraform-state"
 
-    server_side_encryption_configuration {
-        rule {
-            apply_server_side_encryption_by_default {
-                sse_algorithm = "AES256"
-            }
-        }
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        sse_algorithm = "AES256"
+      }
     }
+  }
 
-    versioning {
-        enabled = true
-    }
+  versioning {
+    enabled = true
+  }
 
-    lifecycle {
-        prevent_destroy = true
-    }
+  lifecycle {
+    prevent_destroy = true
+  }
 
-    tags = local.tags
+  tags = local.tags
 }
 
 resource "aws_s3_bucket_public_access_block" "example" {
@@ -47,14 +47,14 @@ resource "aws_s3_bucket_public_access_block" "example" {
 }
 
 resource "aws_dynamodb_table" "terraform_locks" {
-    name    =   "${var.namespace}-${var.region}-${var.account_name}-${var.project_name}-terraform-state-lock"
-    billing_mode    =   "PAY_PER_REQUEST"
-    hash_key    =   "LockID"
+  name         = "${var.namespace}-${var.region}-${var.account_name}-${var.project_name}-terraform-state-lock"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "LockID"
 
-    attribute {
-        name    =   "LockID"
-        type    =   "S"
-    }
+  attribute {
+    name = "LockID"
+    type = "S"
+  }
 
-    tags = local.tags
+  tags = local.tags
 }

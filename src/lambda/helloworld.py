@@ -30,7 +30,7 @@ def lambda_handler(event, context):
         table.put_item(Item={"UserId":"classic_lambda","Score":1})
         response = table.get_item(Key={'UserId': "classic_lambda"})
         
-    result='Hello world from classic Lambda!'+json.dumps(response["Item"], indent=4, sort_keys=True,cls=DecimalEncoder)
+    result='Hello world from classic Lambda v1!'+json.dumps(response["Item"], indent=4, sort_keys=True,cls=DecimalEncoder)
     response = {
     "statusCode": 200,
     "statusDescription": "200 OK",

@@ -1,13 +1,13 @@
 resource "aws_lambda_function" "lambda_container" {
-  function_name    = replace("helloworld-v2-${var.namespace}-${var.region}-${var.account_name}-${var.project_name}","_","-")
-  role             = "${aws_iam_role.iam_for_lambda_tf.arn}"
-  image_uri        = "${var.image_uri}:latest"
-  package_type     = "Image"
-  timeout = 30
+  function_name = replace("helloworld-v2-${var.namespace}-${var.region}-${var.account_name}-${var.project_name}", "_", "-")
+  role          = "${aws_iam_role.iam_for_lambda_tf.arn}"
+  image_uri     = "${var.image_uri}:latest"
+  package_type  = "Image"
+  timeout       = 30
 }
 
 resource "aws_iam_role" "iam_for_lambda_tf" {
-  name = replace("lambda-container-role-${var.namespace}-${var.region}-${var.account_name}-${var.project_name}","_","-")
+  name = replace("lambda-container-role-${var.namespace}-${var.region}-${var.account_name}-${var.project_name}", "_", "-")
 
   assume_role_policy = <<EOF
 {
@@ -27,7 +27,7 @@ EOF
 }
 
 resource "aws_iam_policy" "lambda-policy" {
-  name        = replace("lambda-container-policy-${var.namespace}-${var.region}-${var.account_name}-${var.project_name}","_","-")
+  name        = replace("lambda-container-policy-${var.namespace}-${var.region}-${var.account_name}-${var.project_name}", "_", "-")
   description = "A lambda policy"
 
   policy = <<EOF

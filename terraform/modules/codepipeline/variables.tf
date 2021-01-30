@@ -1,67 +1,67 @@
 variable codebuild_role_arn {
-    type = string
+  type = string
 }
 
 variable codebuild_project_docker {
-    type = string
+  type = string
 }
 
 variable codebuild_project_lambda {
-    type = string
+  type = string
 }
 
 variable codebuild_project_lambda_container {
-    type = string
+  type = string
 }
 
 variable "codebuild_deploy_project_lambda_container" {
-  
+
 }
 
 variable releases_bucket_id {
-    type = string
+  type = string
 }
 
 variable github_org {
-    type = string
+  type = string
 }
 
 variable github_project {
-    type = string
+  type = string
 }
 
 variable ecr_repo {
-    type = string
+  type = string
 }
 
 variable github_token {
-    type = string
+  type = string
 }
 
 variable app {
-    type = string
+  type = string
 }
 
 variable ecs_cluster_name {
-    type = string
+  type = string
 }
 
 variable service_name {
-    type = string
+  type = string
 }
 
 variable "project_name" {
-  type        = string  
+  type = string
 }
 
 variable "account_name" {
-  type        = string  
+  type = string
 }
 
 variable "region" {
-  type        = string  
+  type = string
 }
 
 variable namespace {
-    type = string
+  type = string
 }

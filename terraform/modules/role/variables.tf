@@ -13,9 +13,9 @@ variable "enabled" {
 
 
 variable project_name {
-    type = string
+  type = string
 }
 
 variable namespace {
-    type = string
+  type = string
 }

@@ -1,27 +1,27 @@
 variable "lambda_target_group_arn" {
-  
+
 }
 
 variable account_name {
-    type = string
+  type = string
 }
 
 variable project_name {
-    type = string
+  type = string
 }
 
 variable namespace {
-    type = string
+  type = string
 }
 
 variable region {
-    type = string
+  type = string
 }
 
 variable terraform_version {
-    type = string
+  type = string
 }
 
 variable image_uri {
-  
+
 }

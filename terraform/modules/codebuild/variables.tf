@@ -6,15 +6,15 @@ variable "namespace" {
 }
 
 variable "project_name" {
-  type        = string  
+  type = string
 }
 
 variable "account_name" {
-  type        = string  
+  type = string
 }
 
 variable "region" {
-  type        = string  
+  type = string
 }
 
 variable "environment_variables" {
@@ -153,8 +153,8 @@ variable "artifact_type" {
 }
 
 variable "artifact_location" {
-  type        = string
-  default     = ""
+  type    = string
+  default = ""
 }
 
 variable "report_build_status" {
@@ -224,13 +224,13 @@ variable "logs_config" {
 }
 
 variable "code_build_role_arn" {
-  
+
 }
 
 variable "code_build_project_name" {
-  
+
 }
 
 variable trigger_enabled {
-  
+
 }

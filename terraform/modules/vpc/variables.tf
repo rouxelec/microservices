@@ -1,5 +1,5 @@
 variable "account_name" {
-  type        = string
+  type = string
 }
 
 variable "project_name" {
@@ -8,15 +8,15 @@ variable "project_name" {
 }
 
 variable "namespace" {
-  type        = string
-}          
+  type = string
+}
 
-variable "region" {  
+variable "region" {
   type        = string
   description = "Region of the VPC"
 }
 
-variable "cidr_block" {  
+variable "cidr_block" {
   type        = string
   description = "CIDR block for the VPC"
 }

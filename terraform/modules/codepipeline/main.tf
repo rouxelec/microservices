@@ -1,5 +1,5 @@
 resource "aws_codepipeline" "project" {
-  name     = replace("${var.app}-${var.namespace}-${var.region}-${var.account_name}-${var.project_name}-releases","_","-")
+  name     = replace("${var.app}-${var.namespace}-${var.region}-${var.account_name}-${var.project_name}-releases", "_", "-")
   role_arn = var.codebuild_role_arn
 
   artifact_store {
@@ -36,10 +36,10 @@ resource "aws_codepipeline" "project" {
       version          = "1"
       output_artifacts = ["source_output"]
       configuration = {
-        RepositoryName                 = "${var.ecr_repo}"
+        RepositoryName = "${var.ecr_repo}"
       }
     }
-    
+
   }
 
   stage {
@@ -86,19 +86,19 @@ resource "aws_codepipeline" "project" {
         ProjectName = "${var.codebuild_project_lambda_container}"
       }
     }
-    
+
   }
 
   stage {
     name = "Deploy"
 
     action {
-      name             = "Deploy"
-      category         = "Deploy"
-      owner            = "AWS"
-      provider         = "ECS"
-      input_artifacts  = ["imagedefinitions"]
-      version          = "1"
+      name            = "Deploy"
+      category        = "Deploy"
+      owner           = "AWS"
+      provider        = "ECS"
+      input_artifacts = ["imagedefinitions"]
+      version         = "1"
 
       configuration = {
         ClusterName = var.ecs_cluster_name
@@ -106,24 +106,25 @@ resource "aws_codepipeline" "project" {
         FileName    = "imagedefinitions.json"
       }
     }
-    action {
-      name             = "Deploy_lambda_container"
-      category         = "Deploy"
-      owner            = "AWS"
-      provider         = "CodeBuild"
-      version          = "1"
 
+    action {
+      name            = "Deploy_lambda_container"
+      category        = "Deploy"
+      owner           = "AWS"
+      provider        = "CodeBuild"
+      version         = "1"
+      input_artifacts = ["lambda_container"]
       configuration = {
         ProjectName = "${var.codebuild_deploy_project_lambda_container}"
       }
     }
   }
-  
+
 
 }
 
 resource "null_resource" "update_source" {
-  depends_on  = [aws_codepipeline.project]
+  depends_on = [aws_codepipeline.project]
 
   provisioner "local-exec" {
     command = "echo test"

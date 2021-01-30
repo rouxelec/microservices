@@ -33,7 +33,7 @@ def hello():
     except Exception as e: 
         table.put_item(Item={"UserId":"ecs","Score":1})
         response = table.get_item(Key={'UserId': "ecs"})
-    return "Hello World ecs version!   "+json.dumps(response["Item"], indent=4, sort_keys=True,cls=DecimalEncoder)
+    return "Hello World ecs version v1!   "+json.dumps(response["Item"], indent=4, sort_keys=True,cls=DecimalEncoder)
 
 @app.route("/healthcheck")
 def healthcheck():

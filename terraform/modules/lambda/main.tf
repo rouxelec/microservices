@@ -1,21 +1,21 @@
 data "archive_file" "lambda_zip" {
-    type          = "zip"
-    source_file   = "../../../src/lambda/helloworld.py"
-    output_path   = "../../../terraform/temp/helloworld_lambda.zip"
+  type        = "zip"
+  source_file = "../../../src/lambda/helloworld.py"
+  output_path = "../../../terraform/temp/helloworld_lambda.zip"
 }
 
 resource "aws_lambda_function" "lambda_runtime" {
   filename         = "../../../terraform/temp/helloworld_lambda.zip"
-  function_name    = replace("helloworld-v1-${var.namespace}-${var.region}-${var.account_name}-${var.project_name}","_","-")
+  function_name    = replace("helloworld-v1-${var.namespace}-${var.region}-${var.account_name}-${var.project_name}", "_", "-")
   role             = "${aws_iam_role.iam_for_lambda_tf.arn}"
   handler          = "helloworld.lambda_handler"
   source_code_hash = "${data.archive_file.lambda_zip.output_base64sha256}"
   runtime          = "python3.7"
-  timeout = 30
+  timeout          = 30
 }
 
 resource "aws_iam_role" "iam_for_lambda_tf" {
-  name = replace("lambda-role-${var.namespace}-${var.region}-${var.account_name}-${var.project_name}","_","-")
+  name = replace("lambda-role-${var.namespace}-${var.region}-${var.account_name}-${var.project_name}", "_", "-")
 
   assume_role_policy = <<EOF
 {
@@ -35,7 +35,7 @@ EOF
 }
 
 resource "aws_iam_policy" "lambda-policy" {
-  name        = replace("lambda-policy-${var.namespace}-${var.region}-${var.account_name}-${var.project_name}","_","-")
+  name        = replace("lambda-policy-${var.namespace}-${var.region}-${var.account_name}-${var.project_name}", "_", "-")
   description = "A lambda policy"
 
   policy = <<EOF
