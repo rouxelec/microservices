@@ -14,10 +14,6 @@ variable codebuild_project_lambda_container {
   type = string
 }
 
-variable "codebuild_deploy_project_lambda_container" {
-
-}
-
 variable "codebuild_deploy_project_ec2" {
   
 }

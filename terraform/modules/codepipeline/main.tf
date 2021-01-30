@@ -119,17 +119,6 @@ resource "aws_codepipeline" "project" {
         FileName    = "imagedefinitions.json"
       }
     }
-
-    action {
-      name            = "Deploy_lambda_container"
-      category        = "Build"
-      owner           = "AWS"
-      provider        = "CodeBuild"
-      version         = "1"
-      configuration = {
-        ProjectName = "${var.codebuild_deploy_project_lambda_container}"
-      }
-    }
   }
 
 

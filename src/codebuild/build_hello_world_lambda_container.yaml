@@ -11,14 +11,34 @@ phases:
       - cat src/docker/hello-world-lambda/Dockerfile
       - REPOSITORY_URI=$(aws ssm get-parameter --name "ecr_appv2_repo_url" | jq -r '.Parameter.Value')
       - echo $REPOSITORY_URI
+      - S3_CONFIG_BUCKET=$(aws ssm get-parameter --name "s3_config_bucket" | jq -r '.Parameter.Value')
+      - aws s3 cp s3://$S3_CONFIG_BUCKET/terraform.tfvars terraform/environments/dev/
+      - echo "repo_uri=\"${REPOSITORY_URI}\"" >> terraform/environments/dev/terraform.tfvars
+      - cat terraform/environments/dev/terraform.tfvars
+      - sed -i "s|module.ecr.ecr_img_repo_url|var.repo_uri|g" terraform/environments/dev/main.tf
+      - cat terraform/environments/dev/main.tf
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
+      - $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
+      - TF_VERSION=$(aws ssm get-parameter --name "terraform_version" | jq -r '.Parameter.Value')
+      - echo install terraform
+      - cd terraform/environments/dev/
+      - $(wget https://releases.hashicorp.com/terraform/$TF_VERSION/terraform_${TF_VERSION}_linux_amd64.zip)
+      - pwd
+      - ls
+      - unzip ./terraform_${TF_VERSION}_linux_amd64.zip
+      - ls
   build:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...
+      - cd ../../..
       - docker build -t $REPOSITORY_URI:latest src/docker/hello-world-lambda/
       - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+      - cd terraform/environments/dev/
+      - echo Building the lambda...      
+      - ./terraform init
+      - ./terraform apply -target=module.lambda_container -auto-approve -lock=false
   post_build:
     commands:
       - echo Build completed on `date`
