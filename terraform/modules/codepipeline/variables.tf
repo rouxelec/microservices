@@ -18,6 +18,10 @@ variable "codebuild_deploy_project_lambda_container" {
 
 }
 
+variable "codebuild_deploy_project_ec2" {
+  
+}
+
 variable releases_bucket_id {
   type = string
 }

@@ -87,6 +87,19 @@ resource "aws_codepipeline" "project" {
       }
     }
 
+    action {
+      name             = "Build_ec2"
+      category         = "Build"
+      owner            = "AWS"
+      provider         = "CodeBuild"
+      input_artifacts  = ["${var.app}"]
+      version          = "1"
+
+      configuration = {
+        ProjectName = "${var.codebuild_deploy_project_ec2}"
+      }
+    }
+
   }
 
   stage {
