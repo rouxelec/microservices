@@ -11,14 +11,12 @@ phases:
       - cat src/docker/hello-world-lambda/Dockerfile
       - REPOSITORY_URI=$(aws ssm get-parameter --name "ecr_appv2_repo_url" | jq -r '.Parameter.Value')
       - echo $REPOSITORY_URI
-      - cat terraform/environments/dev/main.tf
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
   build:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...
-      - cd ../../..
       - docker build -t $REPOSITORY_URI:latest src/docker/hello-world-lambda/
       - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
   post_build:
