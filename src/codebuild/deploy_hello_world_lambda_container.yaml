@@ -27,7 +27,6 @@ phases:
   build:
     commands:
       - echo Deployment started on `date`
-      - cd terraform/environments/dev/
       - echo Building the lambda...      
       - ./terraform init
       - ./terraform apply -target=module.lambda_container -auto-approve -lock=false
