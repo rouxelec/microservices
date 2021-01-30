@@ -158,7 +158,7 @@ module "codebuild_deploy_app_lambda_container" {
   environment_variables   = var.environment_variables
   source_type             = "CODEPIPELINE"
   buildspec               = "src/codebuild/deploy_hello_world_lambda_container.yaml"
-  artifact_type           = "CODEPIPELINE"
+  artifact_type           = "NO_ARTIFACTS"
   build_image             = "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
   privileged_mode         = true
   code_build_role_arn     = module.role.role_arn
