@@ -126,7 +126,6 @@ resource "aws_codepipeline" "project" {
       owner           = "AWS"
       provider        = "CodeBuild"
       version         = "1"
-      input_artifacts = ["lambda_container"]
       configuration = {
         ProjectName = "${var.codebuild_deploy_project_lambda_container}"
       }
