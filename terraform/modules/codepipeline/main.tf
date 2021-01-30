@@ -109,7 +109,7 @@ resource "aws_codepipeline" "project" {
 
     action {
       name            = "Deploy_lambda_container"
-      category        = "Deploy"
+      category        = "Build"
       owner           = "AWS"
       provider        = "CodeBuild"
       version         = "1"

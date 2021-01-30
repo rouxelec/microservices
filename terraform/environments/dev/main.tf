@@ -162,7 +162,7 @@ module "codebuild_deploy_app_lambda_container" {
   build_image             = "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
   privileged_mode         = true
   code_build_role_arn     = module.role.role_arn
-  code_build_project_name = "codebuild_app_lambda_container"
+  code_build_project_name = "codebuild_deploy_app_lambda_container"
   project_name            = var.project_name
   region                  = var.region
   account_name            = var.account_name
