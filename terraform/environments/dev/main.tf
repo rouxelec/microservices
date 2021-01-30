@@ -153,23 +153,24 @@ module "codebuild_app_lambda_container" {
 }
 
 module "codepipeline_app" {
-  source                            = "../../modules/codepipeline"
-  codebuild_role_arn                = module.role.role_arn
-  codebuild_project_docker          = module.codebuild_app_docker.project_name
-  codebuild_project_lambda          = module.codebuild_app_lambda.project_name
-  codebuild_project_lambda_container= module.codebuild_app_lambda_container.project_name
-  ecr_repo                          = module.ecr.ecr_img_repo_name
-  github_org                        = var.github_org
-  github_project                    = "fun_project"
-  github_token                      = var.github_token
-  app                               = "hello-world"
-  releases_bucket_id                = module.s3.s3_bucket_release_name
-  ecs_cluster_name                  = module.ecs.ecs_cluster_name
-  service_name                      = module.ecs.ecs_service_name
-  project_name                      = var.project_name
-  region                            = var.region
-  account_name                      = var.account_name
-  namespace                         = var.namespace
+  source                                    = "../../modules/codepipeline"
+  codebuild_role_arn                        = module.role.role_arn
+  codebuild_project_docker                  = module.codebuild_app_docker.project_name
+  codebuild_project_lambda                  = module.codebuild_app_lambda.project_name
+  codebuild_project_lambda_container        = module.codebuild_app_lambda_container.project_name
+  codebuild_deploy_project_lambda_container = module.codebuild_deploy_project_lambda_container
+  ecr_repo                                  = module.ecr.ecr_img_repo_name
+  github_org                                = var.github_org
+  github_project                            = "fun_project"
+  github_token                              = var.github_token
+  app                                       = "hello-world"
+  releases_bucket_id                        = module.s3.s3_bucket_release_name
+  ecs_cluster_name                          = module.ecs.ecs_cluster_name
+  service_name                              = module.ecs.ecs_service_name
+  project_name                              = var.project_name
+  region                                    = var.region
+  account_name                              = var.account_name
+  namespace                                 = var.namespace
 }
 
 module "ecs" {
@@ -205,6 +206,7 @@ module "ecs" {
    target_group                   = module.alb.ec2_target_group_arn
    configbucket_name              = module.s3.s3_bucket_config_name
    app_port                       = "5000"
+   desired_capacity               = 1
    project_name                   = var.project_name
    account_name                   = var.account_name
    namespace                      = var.namespace

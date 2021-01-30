@@ -22,6 +22,10 @@ variable "app_port" {
   
 }
 
+variable "desired_capacity" {
+  
+}
+
 variable "subnet_ids" {
   type=list
 }
