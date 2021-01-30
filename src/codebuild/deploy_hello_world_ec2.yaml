@@ -10,7 +10,7 @@ phases:
       - echo Deploy started on `date`
       - echo scaling out the ASG...
       - ASG_NAME=$(aws ssm get-parameter --name "asg_name" | jq -r '.Parameter.Value')
-      - aws autoscaling update-auto-scaling-group --auto-scaling-group-name $ASG_NAME --desired-capacity 2
+      - aws autoscaling update-auto-scaling-group --auto-scaling-group-name ${ASG_NAME} --desired-capacity 2
   post_build:
     commands:
       - echo Build completed on `date`

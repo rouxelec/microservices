@@ -47,7 +47,8 @@ data "aws_iam_policy_document" "permissions" {
       "ecr:*",
       "dynamodb:*",
       "codestar-connections:UseConnection",
-      "elasticloadbalancing:*"
+      "elasticloadbalancing:*",
+      "autoscaling:*"
     ], var.extra_permissions))
 
     effect = "Allow"
