@@ -169,25 +169,82 @@ module "codebuild_deploy_app_ec2" {
   trigger_enabled         = false
 }
 
-module "codepipeline_app" {
+module "codepipeline_lambda" {
   source                                    = "../../modules/codepipeline"
   codebuild_role_arn                        = module.role.role_arn
-  codebuild_project_docker                  = module.codebuild_app_docker.project_name
-  codebuild_project_lambda                  = module.codebuild_app_lambda.project_name
-  codebuild_project_lambda_container        = module.codebuild_app_lambda_container.project_name
-  codebuild_deploy_project_ec2              = module.codebuild_deploy_app_ec2.project_name
+  configuration                             = {ProjectName = module.codebuild_app_lambda.project_name }
   ecr_repo                                  = module.ecr.ecr_img_repo_name
   github_org                                = var.github_org
   github_project                            = "fun_project"
   github_token                              = var.github_token
-  app                                       = "hello-world"
+  app                                       = "hw-lambda"
   releases_bucket_id                        = module.s3.s3_bucket_release_name
-  ecs_cluster_name                          = module.ecs.ecs_cluster_name
-  service_name                              = module.ecs.ecs_service_name
   project_name                              = var.project_name
   region                                    = var.region
   account_name                              = var.account_name
   namespace                                 = var.namespace
+  output_artifacts                          = ["lambda"]
+  build_enabled                             = true
+  deploy_enabled                            = false
+}
+
+module "codepipeline_lambda_container" {
+  source                                    = "../../modules/codepipeline"
+  codebuild_role_arn                        = module.role.role_arn
+  configuration                             = {ProjectName = module.codebuild_deploy_app_ec2.project_name }
+  ecr_repo                                  = module.ecr.ecr_img_repo_name
+  github_org                                = var.github_org
+  github_project                            = "fun_project"
+  github_token                              = var.github_token
+  app                                       = "hw-lambda-container"
+  releases_bucket_id                        = module.s3.s3_bucket_release_name
+  project_name                              = var.project_name
+  region                                    = var.region
+  account_name                              = var.account_name
+  namespace                                 = var.namespace
+  output_artifacts                          = ["lambda_container"]
+  build_enabled                             = true
+  deploy_enabled                            = false
+}
+
+module "codepipeline_ec2" {
+  source                                    = "../../modules/codepipeline"
+  codebuild_role_arn                        = module.role.role_arn
+  configuration                             = {ProjectName = module.codebuild_app_lambda_container.project_name }
+  ecr_repo                                  = module.ecr.ecr_img_repo_name
+  github_org                                = var.github_org
+  github_project                            = "fun_project"
+  github_token                              = var.github_token
+  app                                       = "hw-ec2"
+  releases_bucket_id                        = module.s3.s3_bucket_release_name
+  project_name                              = var.project_name
+  region                                    = var.region
+  account_name                              = var.account_name
+  namespace                                 = var.namespace
+  output_artifacts                          = [""]
+  build_enabled                             = true
+  deploy_enabled                            = false
+}
+
+module "codepipeline_ecs" {
+  source                                    = "../../modules/codepipeline"
+  codebuild_role_arn                        = module.role.role_arn
+  configuration                             = {ProjectName = module.codebuild_app_docker.project_name }
+  ecr_repo                                  = module.ecr.ecr_img_repo_name
+  github_org                                = var.github_org
+  github_project                            = "fun_project"
+  github_token                              = var.github_token
+  app                                       = "hw-ecs"
+  releases_bucket_id                        = module.s3.s3_bucket_release_name
+  project_name                              = var.project_name
+  region                                    = var.region
+  account_name                              = var.account_name
+  namespace                                 = var.namespace
+  ecs_cluster_name                          = module.ecs.ecs_cluster_name
+  service_name                              = module.ecs.ecs_service_name
+  output_artifacts                          = ["imagedefinitions"]
+  build_enabled                             = false
+  deploy_enabled                            = true
 }
 
 module "ecs" {

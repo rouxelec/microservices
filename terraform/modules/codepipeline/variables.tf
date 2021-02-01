@@ -2,20 +2,20 @@ variable codebuild_role_arn {
   type = string
 }
 
-variable codebuild_project_docker {
-  type = string
+variable "output_artifacts" {
+  type = list
 }
 
-variable codebuild_project_lambda {
-  type = string
+variable "configuration" {
+  type = map
 }
 
-variable codebuild_project_lambda_container {
-  type = string
+variable "deploy_enabled" {
+  type = bool
 }
 
-variable "codebuild_deploy_project_ec2" {
-  
+variable "build_enabled" {
+  type = bool
 }
 
 variable releases_bucket_id {
@@ -44,10 +44,12 @@ variable app {
 
 variable ecs_cluster_name {
   type = string
+  default=""
 }
 
 variable service_name {
   type = string
+   default=""
 }
 
 variable "project_name" {
