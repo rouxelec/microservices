@@ -67,3 +67,15 @@ variable "region" {
 variable namespace {
   type = string
 }
+
+variable github_repository {
+  default=""
+}
+
+variable github_branch {
+default=""
+}
+
+variable codestar_connection_arn {
+default=""
+}

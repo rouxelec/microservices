@@ -1,6 +1,6 @@
 output "target_group_id" {
   description = "Target group id"
-  value       = aws_lb_target_group.docker-tg.id
+  value       = aws_lb_target_group.ecs-tg.id
 }
 
 output "ec2_target_group_arn" {

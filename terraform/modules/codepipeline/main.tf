@@ -14,16 +14,16 @@ resource "aws_codepipeline" "deploy" {
     action {
       name             = "GitHub_Source"
       category         = "Source"
-      owner            = "ThirdParty"
-      provider         = "GitHub"
+      owner            = "AWS"
+      provider         = "CodeStarSourceConnection"
       version          = "1"
       output_artifacts = ["${var.app}"]
 
       configuration = {
-        Owner      = var.github_org
-        Repo       = var.github_project
-        Branch     = "master"
-        OAuthToken = var.github_token
+        ConnectionArn        = var.codestar_connection_arn
+        FullRepositoryId     = "${var.github_org}/${var.github_repository}"
+        BranchName           = var.github_branch
+        OutputArtifactFormat = "CODE_ZIP"
       }
     }
 
@@ -95,16 +95,16 @@ resource "aws_codepipeline" "build" {
     action {
       name             = "GitHub_Source"
       category         = "Source"
-      owner            = "ThirdParty"
-      provider         = "GitHub"
+      owner            = "AWS"
+      provider         = "CodeStarSourceConnection"
       version          = "1"
       output_artifacts = ["${var.app}"]
 
       configuration = {
-        Owner      = var.github_org
-        Repo       = var.github_project
-        Branch     = "master"
-        OAuthToken = var.github_token
+        ConnectionArn        = var.codestar_connection_arn
+        FullRepositoryId     = "${var.github_org}/${var.github_repository}"
+        BranchName           = var.github_branch
+        OutputArtifactFormat = "CODE_ZIP"
       }
     }
 

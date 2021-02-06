@@ -13,6 +13,10 @@ class DecimalEncoder(json.JSONEncoder):
 
 app = Flask(__name__)
 
+@app.route("/ec2")
+def hello_ecs():
+    return hello()
+
 @app.route("/")
 def hello():
     dynamodb=None

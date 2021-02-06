@@ -51,5 +51,18 @@ variable "terraform_version" {
 
 variable "repo_uri" {
   type    = string
-  default = "toto"
+  default = ""
+}
+
+
+variable github_repository {
+  default = ""
+}
+
+variable github_branch {
+  default = ""
+}
+
+variable codestar_connection_arn {
+  default = ""
 }

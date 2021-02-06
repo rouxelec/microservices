@@ -75,15 +75,86 @@ resource "aws_lb_listener" "front_end" {
     }
   }
 
-  action {
+  
+}
+
+resource "aws_lb_listener_rule" "static_ecs" {
+  listener_arn = aws_lb_listener.front_end.arn
+  priority     = 100
+action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.ecs-tg.arn
   }
 
   condition {
-    path_pattern {
-      values = ["/ecs/*"]
-    }
+    field = "query-string"
+
+    values = [
+      {
+        key   = "target"
+        value = "ecs"
+      }
+    ]
+  }
+}
+
+resource "aws_lb_listener_rule" "static_ec2" {
+  listener_arn = aws_lb_listener.front_end.arn
+  priority     = 100
+action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.ec2-tg.arn
+  }
+
+  condition {
+    field = "query-string"
+
+    values = [
+      {
+        key   = "target"
+        value = "ec2"
+      }
+    ]
+  }
+}
+
+resource "aws_lb_listener_rule" "static_la" {
+  listener_arn = aws_lb_listener.front_end.arn
+  priority     = 100
+action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.lambda-tg.arn
+  }
+
+  condition {
+    field = "query-string"
+
+    values = [
+      {
+        key   = "target"
+        value = "la"
+      }
+    ]
+  }
+}
+
+resource "aws_lb_listener_rule" "static_lc" {
+  listener_arn = aws_lb_listener.front_end.arn
+  priority     = 100
+action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.lambda-container-tg.arn
+  }
+
+  condition {
+    field = "query-string"
+
+    values = [
+      {
+        key   = "target"
+        value = "lc"
+      }
+    ]
   }
 }
 
