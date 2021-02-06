@@ -14,6 +14,8 @@ phases:
       - echo $REPOSITORY_URI
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
+      - echo "{\"id\":{\"S\":\"test\"},\"start\":{\"S\":\"${EPOCHSECONDS}\"}}" > date.json
+      - aws dynamodb put-item --table-name test --item file://date.json
   build:
     commands:
       - echo Build started on `date`
@@ -22,6 +24,8 @@ phases:
       - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
   post_build:
     commands:
+      - echo "{\"id\":{\"S\":\"test\"},\"end\":{\"S\":\"${EPOCHSECONDS}\"}}" > date.json
+      - aws dynamodb put-item --table-name test --item file://date.json
       - echo Build completed on `date`
       - echo Pushing the Docker images...
       - docker push $REPOSITORY_URI:latest

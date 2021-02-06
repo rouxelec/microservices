@@ -194,7 +194,7 @@ module "codepipeline_lambda" {
 module "codepipeline_lambda_container" {
   source                  = "../../modules/codepipeline"
   codebuild_role_arn      = module.role.role_arn
-  configuration           = { ProjectName = module.codebuild_deploy_app_ec2.project_name }
+  configuration           = { ProjectName = module.codebuild_app_lambda_container.project_name }
   ecr_repo                = module.ecr.ecr_img_repo_name
   github_org              = var.github_org
   github_project          = "fun_project"
@@ -216,7 +216,7 @@ module "codepipeline_lambda_container" {
 module "codepipeline_ec2" {
   source                  = "../../modules/codepipeline"
   codebuild_role_arn      = module.role.role_arn
-  configuration           = { ProjectName = module.codebuild_app_lambda_container.project_name }
+  configuration           = { ProjectName = module.codebuild_deploy_app_ec2.project_name }
   ecr_repo                = module.ecr.ecr_img_repo_name
   github_org              = var.github_org
   github_project          = "fun_project"
