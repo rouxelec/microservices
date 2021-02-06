@@ -7,7 +7,7 @@ phases:
       - aws --version
       - DATE=$(date +%s)
       - echo "{\"id\":{\"S\":\"ecs\"},\"when\":{\"S\":\"start"},\"time\":{\"S\":\"${DATE}\"}}" > date.json
-      - aws dynamodb put-item --table-name test --item file://date.json
+      - aws dynamodb put-item --table-name Deployment --item file://date.json
   build:
     commands:
       - echo Deploy started on `date`
@@ -21,4 +21,4 @@ phases:
       - echo Build completed on `date`
       - DATE=$(date +%s)
       - echo "{\"id\":{\"S\":\"ecs\"},\"when\":{\"S\":\"end"},\"time\":{\"S\":\"${DATE}\"}}" > date.json
-      - aws dynamodb put-item --table-name test --item file://date.json
+      - aws dynamodb put-item --table-name Deployment --item file://date.json
