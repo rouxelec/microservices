@@ -1,5 +1,5 @@
 resource "aws_codepipeline" "deploy" {
-  count = var.deploy_enabled ? 1 : 0
+  count    = var.deploy_enabled ? 1 : 0
   name     = replace("${var.app}-${var.namespace}-${var.region}-${var.account_name}-${var.project_name}-releases", "_", "-")
   role_arn = var.codebuild_role_arn
 
@@ -80,7 +80,7 @@ resource "aws_codepipeline" "deploy" {
 }
 
 resource "aws_codepipeline" "build" {
-  count = var.build_enabled ? 1 : 0
+  count    = var.build_enabled ? 1 : 0
   name     = replace("${var.app}-${var.namespace}-${var.region}-${var.account_name}-${var.project_name}-releases", "_", "-")
   role_arn = var.codebuild_role_arn
 

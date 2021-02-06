@@ -199,7 +199,7 @@ resource "aws_autoscaling_group" "web" {
 }
 
 resource "aws_ssm_parameter" "ecr_img_repo_url" {
-    name  = "asg_name"
-    type  = "String"
-    value = aws_autoscaling_group.web.name
-  }
+  name  = "asg_name"
+  type  = "String"
+  value = aws_autoscaling_group.web.name
+}

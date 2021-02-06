@@ -43,13 +43,13 @@ variable app {
 }
 
 variable ecs_cluster_name {
-  type = string
-  default=""
+  type    = string
+  default = ""
 }
 
 variable service_name {
-  type = string
-   default=""
+  type    = string
+  default = ""
 }
 
 variable "project_name" {
@@ -69,13 +69,13 @@ variable namespace {
 }
 
 variable github_repository {
-  default=""
+  default = ""
 }
 
 variable github_branch {
-default=""
+  default = ""
 }
 
 variable codestar_connection_arn {
-default=""
+  default = ""
 }
