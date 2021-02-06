@@ -9,8 +9,8 @@ resource "aws_lb" "front_end_lb" {
 
 }
 
-resource "aws_lb_target_group" "docker-tg" {
-  name        = replace("docker-tg-${var.namespace}-${var.project_name}", "_", "-")
+resource "aws_lb_target_group" "ecs-tg" {
+  name        = replace("ecs-tg-${var.namespace}-${var.project_name}", "_", "-")
   port        = 5000
   protocol    = "HTTP"
   target_type = "ip"
@@ -57,7 +57,7 @@ resource "aws_lb_listener" "front_end" {
         enabled  = false
       }
       target_group {
-        arn    = aws_lb_target_group.docker-tg.arn
+        arn    = aws_lb_target_group.ecs-tg.arn
         weight = 25
       }
       target_group {
@@ -72,6 +72,17 @@ resource "aws_lb_listener" "front_end" {
         arn    = aws_lb_target_group.lambda-container-tg.arn
         weight = 25
       }
+    }
+  }
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.ecs-tg.arn
+  }
+
+  condition {
+    path_pattern {
+      values = ["/ecs/*"]
     }
   }
 }
