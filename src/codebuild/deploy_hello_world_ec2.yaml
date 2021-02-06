@@ -5,7 +5,8 @@ phases:
     commands:
       - echo deploy ec2 helloworld version
       - aws --version
-      - echo "{\"id\":{\"S\":\"test\"},\"start\":{\"S\":\"${EPOCHSECONDS}\"}}" > date.json
+      - DATE=$(date +%s)
+      - echo "{\"id\":{\"S\":\"ec2\"},\"start\":{\"S\":\"${DATE}\"}}" > date.json
       - aws dynamodb put-item --table-name test --item file://date.json
   build:
     commands:
@@ -18,5 +19,6 @@ phases:
   post_build:
     commands:
       - echo Build completed on `date`
-      - echo "{\"id\":{\"S\":\"test\"},\"end\":{\"S\":\"${EPOCHSECONDS}\"}}" > date.json
+      - DATE=$(date +%s)
+      - echo "{\"id\":{\"S\":\"ec2\"},\"end\":{\"S\":\"${DATE}\"}}" > date.json
       - aws dynamodb put-item --table-name test --item file://date.json
