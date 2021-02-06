@@ -18,7 +18,7 @@ phases:
       - aws s3 cp s3://$S3_CONFIG_BUCKET/terraform.tfvars .
       - ls
       - DATE=$(date +%s)
-      - echo "{\"id\":{\"S\":\"la\"},\"start\":{\"S\":\"${DATE}\"}}" > date.json
+      - echo "{\"id\":{\"S\":\"ecs\"},\"when\":{\"S\":\"start"},\"time\":{\"S\":\"${DATE}\"}}" > date.json
       - aws dynamodb put-item --table-name test --item file://date.json
   build:
     commands:
@@ -29,6 +29,6 @@ phases:
   post_build:
     commands:
       - DATE=$(date +%s)
-      - echo "{\"id\":{\"S\":\"la\"},\"end\":{\"S\":\"${DATE}\"}}" > date.json
+      - echo "{\"id\":{\"S\":\"ecs\"},\"when\":{\"S\":\"end"},\"time\":{\"S\":\"${DATE}\"}}" > date.json
       - aws dynamodb put-item --table-name test --item file://date.json
       - echo Build completed on `date`
