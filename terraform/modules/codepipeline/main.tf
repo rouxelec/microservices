@@ -76,6 +76,21 @@ resource "aws_codepipeline" "deploy" {
     }
   }
 
+  stage {
+    name = "Test"
+
+    action {
+      name             = "Test_${var.app}"
+      category         = "Build"
+      owner            = "AWS"
+      provider         = "CodeBuild"
+      input_artifacts  = ["${var.app}"]
+      output_artifacts = ["test"]
+      version          = "1"
+
+      configuration = var.configuration_test
+    }
+  }
 
 }
 
@@ -135,6 +150,22 @@ resource "aws_codepipeline" "build" {
       version          = "1"
 
       configuration = var.configuration
+    }
+  }
+
+    stage {
+    name = "Test"
+
+    action {
+      name             = "Test_${var.app}"
+      category         = "Build"
+      owner            = "AWS"
+      provider         = "CodeBuild"
+      input_artifacts  = var.output_artifacts
+      output_artifacts = ["test"]
+      version          = "1"
+
+      configuration = var.configuration_test
     }
   }
 }

@@ -17,10 +17,15 @@ resource "aws_dynamodb_table" "deployment" {
   read_capacity  = 5
   write_capacity = 5
   hash_key       = "id"
+  range_key      = "when"
 
   attribute {
     name = "id"
     type = "S"
   }
 
+    attribute {
+    name = "when"
+    type = "S"
+  }
 }

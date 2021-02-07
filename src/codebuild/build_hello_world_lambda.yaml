@@ -17,7 +17,9 @@ phases:
       - S3_CONFIG_BUCKET=$(aws ssm get-parameter --name "s3_config_bucket" | jq -r '.Parameter.Value')
       - aws s3 cp s3://$S3_CONFIG_BUCKET/terraform.tfvars .
       - ls
-      - START=$(date +%s)
+      - DATE=$(date +%s)
+      - echo "{\"id\":{\"S\":\"ecs\"},\"when\":{\"S\":\"start\"},\"time\":{\"S\":\"${DATE}\"}}" > date.json
+      - aws dynamodb put-item --table-name Deployment --item file://date.json
   build:
     commands:
       - echo Build started on `date`
@@ -26,8 +28,4 @@ phases:
       - ./terraform apply -target=module.lambda -auto-approve -lock=false
   post_build:
     commands:
-      - END=$(date +%s)
-      - ELASPED_TIME=$((END-START))
-      - echo "{\"id\":{\"S\":\"lambda\"},\"time\":{\"S\":\"${ELASPED_TIME}\"}}" > date.json
-      - aws dynamodb put-item --table-name Deployment --item file://date.json
       - echo Build completed on `date`
