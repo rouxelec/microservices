@@ -19,5 +19,5 @@ phases:
       - echo Build completed on `date`
       - END=$(date +%s)
       - ELASPED_TIME=$((END-START))
-      - echo "{\"id\":{\"S\":\"ecs\"},\"time\":{\"S\":\"${ELASPED_TIME}\"}}" > date.json
+      - echo "{\"id\":{\"S\":\"ec2\"},\"time\":{\"S\":\"${ELASPED_TIME}\"}}" > date.json
       - aws dynamodb put-item --table-name Deployment --item file://date.json
