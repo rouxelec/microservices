@@ -164,3 +164,9 @@ resource "aws_security_group" "allow_http" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
+
+resource "aws_ssm_parameter" "alb_url" {
+  name  = "alb_url"
+  type  = "String"
+  value = aws_lb.front_end_lb.dns_name
+}

@@ -20,6 +20,7 @@ def hello_ecs():
 @app.route("/")
 def hello():
     dynamodb=None
+    version="1"
     if not dynamodb:
         dynamodb = boto3.resource('dynamodb')
     try:
@@ -28,17 +29,18 @@ def hello():
         Key={
             "UserId": "ec2"
         },
-        UpdateExpression="set Score = Score + :val",
+        UpdateExpression="set Score = Score + :val, Version = :ver",
         ExpressionAttributeValues={
-            ":val": int(1)
+            ":val": int(1),
+            ":ver": version
         },
         ReturnValues="UPDATED_NEW"
         )
         response = table.get_item(Key={'UserId': "ec2"})
     except Exception as e: 
-        table.put_item(Item={"UserId":"ec2","Score":1})
+        table.put_item(Item={"UserId":"ec2","Score":1,"Version":"1"})
         response = table.get_item(Key={'UserId': "ec2"})
-    return "Hello World old fashion ec2 version v1!   "+json.dumps(response["Item"], indent=4, sort_keys=True,cls=DecimalEncoder)
+    return "Hello World old fashion ec2 version v"+str(version)+"!   "+json.dumps(response["Item"], indent=4, sort_keys=True,cls=DecimalEncoder)
 
 @app.route("/healthcheck")
 def healthcheck():

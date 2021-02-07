@@ -5,10 +5,13 @@ phases:
     commands:
       - echo Logging in to Amazon ECR...
       - aws --version
+      - ALB_URL=$(aws ssm get-parameter --name "alb_url" | jq -r '.Parameter.Value')
+      - QUERY_STRING="?target=ec2"
+      - EC2_URL="$ALB_URL$QUERY_STRING"
   build:
     commands:
-      - echo Build started on `date`
-      - echo Building the Docker image...
+      - echo Test started on `date`
+      - src/codebuild/test.sh $EC2_URL
   post_build:
     commands:
       - echo Build completed on `date`
