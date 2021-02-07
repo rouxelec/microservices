@@ -87,7 +87,70 @@ module "codebuild_test" {
   github_token            = var.github_token
   source_type             = "GITHUB"
   source_location         = "https://github.com/rouxelec/fun_project"
-  buildspec               = "src/codebuild/build_test.yaml"
+  buildspec               = "src/codebuild/build_test_la.yaml"
+  artifact_type           = "NO_ARTIFACTS"
+  private_repository      = "true"
+  build_image             = "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
+  privileged_mode         = true
+  code_build_role_arn     = module.role.role_arn
+  code_build_project_name = "codebuild_test"
+  project_name            = var.project_name
+  region                  = var.region
+  account_name            = var.account_name
+  trigger_enabled         = true
+}
+
+module "codebuild_test_lc" {
+  source                  = "../../modules/codebuild"
+  namespace               = var.namespace
+  environment_variables   = var.environment_variables
+  source_credential_token = var.github_token
+  github_token            = var.github_token
+  source_type             = "GITHUB"
+  source_location         = "https://github.com/rouxelec/fun_project"
+  buildspec               = "src/codebuild/build_test_lc.yaml"
+  artifact_type           = "NO_ARTIFACTS"
+  private_repository      = "true"
+  build_image             = "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
+  privileged_mode         = true
+  code_build_role_arn     = module.role.role_arn
+  code_build_project_name = "codebuild_test"
+  project_name            = var.project_name
+  region                  = var.region
+  account_name            = var.account_name
+  trigger_enabled         = true
+}
+
+module "codebuild_test_ecs" {
+  source                  = "../../modules/codebuild"
+  namespace               = var.namespace
+  environment_variables   = var.environment_variables
+  source_credential_token = var.github_token
+  github_token            = var.github_token
+  source_type             = "GITHUB"
+  source_location         = "https://github.com/rouxelec/fun_project"
+  buildspec               = "src/codebuild/build_test_ecs.yaml"
+  artifact_type           = "NO_ARTIFACTS"
+  private_repository      = "true"
+  build_image             = "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
+  privileged_mode         = true
+  code_build_role_arn     = module.role.role_arn
+  code_build_project_name = "codebuild_test"
+  project_name            = var.project_name
+  region                  = var.region
+  account_name            = var.account_name
+  trigger_enabled         = true
+}
+
+module "codebuild_test_ec2" {
+  source                  = "../../modules/codebuild"
+  namespace               = var.namespace
+  environment_variables   = var.environment_variables
+  source_credential_token = var.github_token
+  github_token            = var.github_token
+  source_type             = "GITHUB"
+  source_location         = "https://github.com/rouxelec/fun_project"
+  buildspec               = "src/codebuild/build_test_ec2.yaml"
   artifact_type           = "NO_ARTIFACTS"
   private_repository      = "true"
   build_image             = "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
@@ -217,7 +280,7 @@ module "codepipeline_lambda_container" {
   source                  = "../../modules/codepipeline"
   codebuild_role_arn      = module.role.role_arn
   configuration           = { ProjectName = module.codebuild_app_lambda_container.project_name }
-  configuration_test      = { ProjectName = module.codebuild_test.project_name }
+  configuration_test      = { ProjectName = module.codebuild_test_lc.project_name }
   ecr_repo                = module.ecr.ecr_img_repo_name
   github_org              = var.github_org
   github_project          = "fun_project"
@@ -240,7 +303,7 @@ module "codepipeline_ec2" {
   source                  = "../../modules/codepipeline"
   codebuild_role_arn      = module.role.role_arn
   configuration           = { ProjectName = module.codebuild_deploy_app_ec2.project_name }
-  configuration_test      = { ProjectName = module.codebuild_test.project_name }
+  configuration_test      = { ProjectName = module.codebuild_test_ec2.project_name }
   ecr_repo                = module.ecr.ecr_img_repo_name
   github_org              = var.github_org
   github_project          = "fun_project"
@@ -263,7 +326,7 @@ module "codepipeline_ecs" {
   source                  = "../../modules/codepipeline"
   codebuild_role_arn      = module.role.role_arn
   configuration           = { ProjectName = module.codebuild_app_docker.project_name }
-  configuration_test      = { ProjectName = module.codebuild_test.project_name }
+  configuration_test      = { ProjectName = module.codebuild_test_ecs.project_name }
   ecr_repo                = module.ecr.ecr_img_repo_name
   github_org              = var.github_org
   github_project          = "fun_project"
