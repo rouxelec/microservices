@@ -13,7 +13,8 @@ phases:
     commands:
       - echo Test started on `date`
       - pwd
-      - sudo src/codebuild/test.sh $EC2_URL
+      - chmod 777 src/codebuild/test.sh
+      - src/codebuild/test.sh $EC2_URL
   post_build:
     commands:
       - echo Build completed on `date`
