@@ -5,11 +5,17 @@ phases:
     commands:
       - echo Logging in to Amazon ECR...
       - aws --version
+      - ALB_URL=$(aws ssm get-parameter --name "alb_url" | jq -r '.Parameter.Value')
+      - QUERY_STRING="?target=la"
+      - LA_URL="$ALB_URL$QUERY_STRING"
+      - echo $LA_URL
+      - USER_ID="classic_lambda"
   build:
     commands:
-      - echo Build started on `date`
-      - echo Building the Docker image...
+      - echo Test started on `date`
+      - pwd
+      - chmod 777 src/codebuild/test.sh
+      - src/codebuild/test.sh $LA_URL $USER_ID 
   post_build:
     commands:
-      - echo Build completed on `date`
-      - echo Pushing the Docker images...
+      - echo Test completed on `date`

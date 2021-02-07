@@ -1,4 +1,4 @@
-import boto3
+src/lambda/helloworld.pysrc/lambda/helloworld.pyimport boto3
 import sys
 from flask import Flask
 import json
@@ -24,7 +24,7 @@ def hello():
     if not dynamodb:
         dynamodb = boto3.resource('dynamodb')
     try:
-        table = dynamodb.Table('GameScores')
+        table = dynamodb.Table('Microservice')
         response = table.update_item(
         Key={
             "UserId": "ec2"

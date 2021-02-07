@@ -9,13 +9,13 @@ phases:
       - QUERY_STRING="?target=ec2"
       - EC2_URL="$ALB_URL$QUERY_STRING"
       - echo $EC2_URL
+      - USER_ID="ec2"
   build:
     commands:
       - echo Test started on `date`
       - pwd
       - chmod 777 src/codebuild/test.sh
-      - src/codebuild/test.sh $EC2_URL
+      - src/codebuild/test.sh $EC2_URL $USER_ID 
   post_build:
     commands:
-      - echo Build completed on `date`
-      - echo Pushing the Docker images...
+      - echo Test completed on `date`
