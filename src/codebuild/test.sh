@@ -6,7 +6,7 @@ for i in $(seq 1 1000); do
     echo $RESULT1
     RESULT2=$(aws dynamodb get-item --table-name Microservice --key '{"UserId":{"S":"api_version"}}' | jq -r '.Item.Version.S')
     echo $RESULT1
-    if [ $RESULT1 -eq $RESULT2 ]
+    if [ "$RESULT1" == "$RESULT2" ]
     then
         echo Hey that\'s a large number.
         break;
