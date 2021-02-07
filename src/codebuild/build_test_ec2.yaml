@@ -8,10 +8,12 @@ phases:
       - ALB_URL=$(aws ssm get-parameter --name "alb_url" | jq -r '.Parameter.Value')
       - QUERY_STRING="?target=ec2"
       - EC2_URL="$ALB_URL$QUERY_STRING"
+      - echo $EC2_URL
   build:
     commands:
       - echo Test started on `date`
-      - src/codebuild/test.sh $EC2_URL
+      - pwd
+      - sudo src/codebuild/test.sh $EC2_URL
   post_build:
     commands:
       - echo Build completed on `date`

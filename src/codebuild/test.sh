@@ -1,4 +1,3 @@
-#!/bin/bash
 for i in $(seq 1 60); do
     echo $i
     curl $1
