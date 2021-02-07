@@ -93,7 +93,7 @@ module "codebuild_test" {
   build_image             = "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
   privileged_mode         = true
   code_build_role_arn     = module.role.role_arn
-  code_build_project_name = "codebuild_test"
+  code_build_project_name = "codebuild_test_la"
   project_name            = var.project_name
   region                  = var.region
   account_name            = var.account_name
@@ -114,7 +114,7 @@ module "codebuild_test_lc" {
   build_image             = "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
   privileged_mode         = true
   code_build_role_arn     = module.role.role_arn
-  code_build_project_name = "codebuild_test"
+  code_build_project_name = "codebuild_test_lc"
   project_name            = var.project_name
   region                  = var.region
   account_name            = var.account_name
@@ -135,7 +135,7 @@ module "codebuild_test_ecs" {
   build_image             = "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
   privileged_mode         = true
   code_build_role_arn     = module.role.role_arn
-  code_build_project_name = "codebuild_test"
+  code_build_project_name = "codebuild_tes_ecs"
   project_name            = var.project_name
   region                  = var.region
   account_name            = var.account_name
@@ -156,7 +156,7 @@ module "codebuild_test_ec2" {
   build_image             = "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
   privileged_mode         = true
   code_build_role_arn     = module.role.role_arn
-  code_build_project_name = "codebuild_test"
+  code_build_project_name = "codebuild_test_ec2"
   project_name            = var.project_name
   region                  = var.region
   account_name            = var.account_name
