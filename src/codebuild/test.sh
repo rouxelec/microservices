@@ -1,4 +1,4 @@
-for i in $(seq 1 1000); do
+for i in $(seq 1 1); do
     echo $i
     curl $1
     sleep 1
