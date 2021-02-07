@@ -28,9 +28,7 @@ phases:
       - ls
       - unzip ./terraform_${TF_VERSION}_linux_amd64.zip
       - ls
-      - DATE=$(date +%s)
-      - echo "{\"id\":{\"S\":\"ecs\"},\"when\":{\"S\":\"start\"},\"time\":{\"S\":\"${DATE}\"}}" > date.json
-      - aws dynamodb put-item --table-name Deployment --item file://date.json
+      - START=$(date +%s)
   build:
     commands:
       - echo Build started on `date`
@@ -44,8 +42,9 @@ phases:
       - ./terraform apply -target=module.lambda_container -auto-approve -lock=false
   post_build:
     commands:
-      - DATE=$(date +%s)
-      - echo "{\"id\":{\"S\":\"ecs\"},\"when\":{\"S\":\"end\"},\"time\":{\"S\":\"${DATE}\"}}" > date.json
+      - END=$(date +%s)
+      - ELASPED_TIME=$((END-START))
+      - echo "{\"id\":{\"S\":\"ecs\"},\"time\":{\"S\":\"${ELASPED_TIME}\"}}" > date.json
       - aws dynamodb put-item --table-name Deployment --item file://date.json
       - echo Build completed on `date`
       - echo Pushing the Docker images...
