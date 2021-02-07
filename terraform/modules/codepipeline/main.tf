@@ -161,7 +161,7 @@ resource "aws_codepipeline" "build" {
       category         = "Build"
       owner            = "AWS"
       provider         = "CodeBuild"
-      input_artifacts  = var.output_artifacts
+      input_artifacts  = ["${var.app}"]
       output_artifacts = ["test"]
       version          = "1"
 
