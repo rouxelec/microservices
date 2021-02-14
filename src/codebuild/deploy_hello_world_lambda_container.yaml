@@ -36,15 +36,10 @@ phases:
       - echo Build started on `date`
       - echo Building the Docker image...
       - cd ../../..
-      - docker build -t $REPOSITORY_URI:latest src/docker/hello-world-lambda/
-      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
-      - echo Pushing the Docker images...
-      - docker push $REPOSITORY_URI:latest
-      - docker push $REPOSITORY_URI:$IMAGE_TAG
       - cd terraform/environments/dev/
       - echo Building the lambda...      
       - ./terraform init
       - ./terraform apply -target=module.lambda_container -auto-approve -lock=false
   post_build:
     commands:
-      - echo Build completed on `date`
+      - echo Deploy completed on `date`
