@@ -13,7 +13,7 @@ phases:
     commands:
       - echo Test started on `date`
       - pwd
-      - chmod 777 src/codebuild/test.sh
+      - chmod 777 src/codebuild/test_classic_lambda.sh
       - src/codebuild/test_classic_lambda.sh $LA_URL
   post_build:
     commands:

@@ -13,7 +13,7 @@ phases:
     commands:
       - echo Test started on `date`
       - pwd
-      - chmod 777 src/codebuild/test.sh
+      - chmod 777 src/codebuild/test_ecs.sh
       - src/codebuild/test_ecs.sh $ECS_URL 
   post_build:
     commands:
