@@ -15,7 +15,7 @@ def lambda_handler(event, context):
     if not dynamodb:
         dynamodb = boto3.resource('dynamodb')
     try:
-        table = dynamodb.Table('GameScoMicroserviceres')
+        table = dynamodb.Table('Microservice')
         response = table.update_item(
         Key={
             "UserId": "lambda_container"

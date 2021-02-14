@@ -26,6 +26,12 @@ resource "aws_ssm_parameter" "s3_config_bucket" {
   value = aws_s3_bucket.config.id
 }
 
+resource "aws_ssm_parameter" "region" {
+  name  = "region"
+  type  = "String"
+  value = var.region
+}
+
 resource "null_resource" "update_source" {
   depends_on = [aws_s3_bucket.config]
 
