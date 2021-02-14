@@ -9,13 +9,12 @@ phases:
       - QUERY_STRING="?target=la"
       - LA_URL="$ALB_URL$QUERY_STRING"
       - echo $LA_URL
-      - USER_ID="classic_lambda"
   build:
     commands:
       - echo Test started on `date`
       - pwd
       - chmod 777 src/codebuild/test.sh
-      - src/codebuild/test.sh $LA_URL $USER_ID 
+      - src/codebuild/test_classic_lambda.sh $LA_URL
   post_build:
     commands:
       - echo Test completed on `date`

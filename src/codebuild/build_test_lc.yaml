@@ -9,13 +9,12 @@ phases:
       - QUERY_STRING="?target=lc"
       - LC_URL="$ALB_URL$QUERY_STRING"
       - echo $LC_URL
-      - USER_ID="lambda_container"
   build:
     commands:
       - echo Test started on `date`
       - pwd
       - chmod 777 src/codebuild/test.sh
-      - src/codebuild/test.sh $LC_URL $USER_ID 
+      - src/codebuild/test_lambda_container.sh $LC_URL 
   post_build:
     commands:
       - echo Test completed on `date`

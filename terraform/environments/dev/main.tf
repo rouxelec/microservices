@@ -79,7 +79,7 @@ module "lambda_container" {
   image_uri               = module.ecr.ecr_img_repo_url
 }
 
-module "codebuild_test" {
+module "codebuild_test_la" {
   source                  = "../../modules/codebuild"
   namespace               = var.namespace
   environment_variables   = var.environment_variables
