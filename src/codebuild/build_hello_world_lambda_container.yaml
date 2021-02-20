@@ -22,7 +22,6 @@ phases:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...
-      - cd ../../..
       - docker build -t $REPOSITORY_URI:latest src/docker/hello-world-lambda/
       - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
       - echo Pushing the Docker images...
