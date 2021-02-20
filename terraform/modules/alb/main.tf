@@ -9,6 +9,16 @@ resource "aws_lb" "front_end_lb" {
 
 }
 
+resource "time_sleep" "wait_30_seconds" {
+  depends_on = [aws_lb.front_end_lb]
+
+  create_duration = "30s"
+}
+
+resource "null_resource" "next" {
+  depends_on = [time_sleep.wait_30_seconds]
+}
+
 resource "aws_lb_target_group" "ecs-tg" {
   name        = replace("ecs-tg-${var.namespace}-${var.project_name}", "_", "-")
   port        = 5000
