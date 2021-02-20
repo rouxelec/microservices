@@ -23,19 +23,19 @@ ALB_URL=$(aws ssm get-parameter --name "alb_url" --region us-east-1| jq -r '.Par
 QUERY_STRING="?target=lc"
 URL="$ALB_URL$QUERY_STRING"
 echo $URL
-sh test_lambda_container.sh $URL
+sh test_lambda_container.sh $URL &
 
 QUERY_STRING="?target=ecs"
 URL="$ALB_URL$QUERY_STRING"
 echo $URL
-sh test_ecs.sh $URL
+sh test_ecs.sh $URL &
 
 QUERY_STRING="?target=ec2"
 URL="$ALB_URL$QUERY_STRING"
 echo $URL
-sh test_ec2.sh $URL
+sh test_ec2.sh $URL &
 
 QUERY_STRING="?target=la"
 URL="$ALB_URL$QUERY_STRING"
 echo $URL
-sh test_classic_lambda.sh $URL
+sh test_classic_lambda.sh $URL &
