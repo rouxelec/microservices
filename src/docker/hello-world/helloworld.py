@@ -18,7 +18,7 @@ def hello_ecs():
     
 @app.route("/")
 def hello():
-    version="4"
+    version="5"
     dynamodb=None
     if not dynamodb:
         dynamodb = boto3.resource('dynamodb')
