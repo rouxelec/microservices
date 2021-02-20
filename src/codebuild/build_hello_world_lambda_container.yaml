@@ -8,7 +8,7 @@ phases:
       - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
       - unzip awscliv2.zip
       - ./aws/install
-      - aws --version
+      - /usr/local/bin/aws --version
       - $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
       - BASE_IMG_REPO_URI=$(aws ssm get-parameter --name "ecr_img_repo_url" | jq -r '.Parameter.Value')
       - sed -i "s|{baseimg_repo}|$BASE_IMG_REPO_URI|g" src/docker/hello-world-lambda/Dockerfile
@@ -21,7 +21,7 @@ phases:
       - $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
       - DATE=$(date +%s)
       - echo "{\"id\":{\"S\":\"ecs\"},\"when\":{\"S\":\"start\"},\"time\":{\"S\":\"${DATE}\"}}" > date.json
-      - aws dynamodb put-item --table-name Deployment --item file://date.json
+      - /usr/local/bin/aws dynamodb put-item --table-name Deployment --item file://date.json
   build:
     commands:
       - echo Build started on `date`
