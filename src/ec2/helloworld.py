@@ -1,4 +1,4 @@
-src/lambda/helloworld.pysrc/lambda/helloworld.pyimport boto3
+import boto3
 import sys
 from flask import Flask
 import json
