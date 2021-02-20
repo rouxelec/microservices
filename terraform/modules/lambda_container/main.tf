@@ -5,7 +5,12 @@ resource "aws_lambda_function" "lambda_container" {
   package_type  = "Image"
   timeout       = 30
   memory_size   = 2048
+}
 
+resource "aws_ssm_parameter" "lambda_image_function_name" {
+  name  = "lambda_image_function_name"
+  type  = "String"
+  value = replace("helloworld-v2-${var.namespace}-${var.region}-${var.account_name}-${var.project_name}", "_", "-")
 }
 
 resource "aws_iam_role" "iam_for_lambda_tf" {
