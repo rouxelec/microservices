@@ -1,4 +1,4 @@
-for i in $(seq 1 2); do
+for i in $(seq 1 2000); do
     curl $1
     sleep 1
     RESULT1=$(aws dynamodb get-item --table-name Microservice --key '{"UserId":{"S":"ecs"}}' --region us-east-1 | jq -r '.Item.Version.S')

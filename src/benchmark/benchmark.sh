@@ -7,7 +7,7 @@ sed -i "s|version=\"${1}\"|version=\"${2}\"|g" ../lambda/helloworld.py
 git add ../docker/hello-world-lambda/helloworld.py ../docker/hello-world/helloworld.py ../ec2/helloworld.py  ../lambda/helloworld.py
 git commit -m"benchmark test"
 git push
-echo "{\"UserId\":{\"S\":\"api_version\"},\"version\":{\"S\":\"${2}\"}}" > version.json
+echo "{\"UserId\":{\"S\":\"api_version\"},\"Version\":{\"S\":\"${2}\"}}" > version.json
 aws dynamodb put-item --table-name Microservice --region us-east-1 --item file://version.json
 
 echo "{\"id\":{\"S\":\"ecs\"},\"when\":{\"S\":\"start\"},\"time\":{\"S\":\"${DATE}\"}}" > date.json

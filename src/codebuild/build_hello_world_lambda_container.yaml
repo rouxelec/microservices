@@ -5,6 +5,10 @@ phases:
     commands:
       - echo build lambda container helloworld version
       - aws --version
+      - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+      - unzip awscliv2.zip
+      - ./aws/install
+      - aws --version
       - $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
       - BASE_IMG_REPO_URI=$(aws ssm get-parameter --name "ecr_img_repo_url" | jq -r '.Parameter.Value')
       - sed -i "s|{baseimg_repo}|$BASE_IMG_REPO_URI|g" src/docker/hello-world-lambda/Dockerfile
