@@ -29,3 +29,11 @@ resource "aws_dynamodb_table" "deployment" {
     type = "S"
   }
 }
+
+resource "null_resource" "dynamodb" {
+  depends_on = [aws_dynamodb_table.microservice]
+
+  provisioner "local-exec" {
+    command = "aws dynamodb put-item --table-name Microservice --region us-east-1 --item '{\"UserId\":{\"S\":\"api_version\"},\"version\":{\"S\":\"4\"}}'"
+  }
+}
