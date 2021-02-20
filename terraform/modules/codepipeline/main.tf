@@ -26,19 +26,6 @@ resource "aws_codepipeline" "deploy" {
         OutputArtifactFormat = "CODE_ZIP"
       }
     }
-
-    action {
-      name             = "Base_img_source"
-      category         = "Source"
-      owner            = "AWS"
-      provider         = "ECR"
-      version          = "1"
-      output_artifacts = ["source_output"]
-      configuration = {
-        RepositoryName = "${var.ecr_repo}"
-      }
-    }
-
   }
 
   stage {
@@ -122,19 +109,6 @@ resource "aws_codepipeline" "build" {
         OutputArtifactFormat = "CODE_ZIP"
       }
     }
-
-    action {
-      name             = "Base_img_source"
-      category         = "Source"
-      owner            = "AWS"
-      provider         = "ECR"
-      version          = "1"
-      output_artifacts = ["source_output"]
-      configuration = {
-        RepositoryName = "${var.ecr_repo}"
-      }
-    }
-
   }
 
   stage {
