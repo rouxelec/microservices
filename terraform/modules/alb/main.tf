@@ -20,6 +20,7 @@ resource "null_resource" "next" {
 }
 
 resource "aws_lb_target_group" "ecs-tg" {
+  depends_on = [aws_lb.front_end_lb]
   name        = replace("ecs-tg-${var.namespace}-${var.project_name}", "_", "-")
   port        = 5000
   protocol    = "HTTP"

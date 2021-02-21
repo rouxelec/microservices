@@ -67,6 +67,16 @@ DEFINITION
   tags = var.tags
 }
 
+resource "time_sleep" "wait_30_seconds" {
+  depends_on = [aws_ecs_task_definition.app]
+
+  create_duration = "30s"
+}
+
+resource "null_resource" "next" {
+  depends_on = [time_sleep.wait_30_seconds]
+}
+
 resource "aws_security_group" "allow_http" {
   name        = "allow_http_ecs"
   description = "Allow TLS inbound traffic"
