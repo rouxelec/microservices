@@ -1,8 +1,8 @@
 resource "aws_dynamodb_table" "microservice" {
   name           = "Microservice"
   billing_mode   = "PROVISIONED"
-  read_capacity  = 5
-  write_capacity = 5
+  read_capacity  = 20
+  write_capacity = 20
   hash_key       = "UserId"
 
   attribute {
@@ -14,8 +14,8 @@ resource "aws_dynamodb_table" "microservice" {
 resource "aws_dynamodb_table" "deployment" {
   name           = "Deployment"
   billing_mode   = "PROVISIONED"
-  read_capacity  = 5
-  write_capacity = 5
+  read_capacity  = 20
+  write_capacity = 20
   hash_key       = "id"
   range_key      = "when"
 
