@@ -11,7 +11,7 @@ class DecimalEncoder(json.JSONEncoder):
 
 def lambda_handler(event, context):
     dynamodb=None
-    version="5"
+    version="6"
     if not dynamodb:
         dynamodb = boto3.resource('dynamodb')
     try:
