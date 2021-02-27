@@ -310,8 +310,6 @@ module "codepipeline_lambda_container" {
   account_name            = var.account_name
   namespace               = var.namespace
   output_artifacts        = ["lambda_container"]
-  build_enabled           = true
-  deploy_enabled          = false
   github_repository       = var.github_repository
   github_branch           = var.github_branch
   codestar_connection_arn = var.codestar_connection_arn
