@@ -241,7 +241,7 @@ module "codebuild_deploy_app_lc" {
   namespace               = var.namespace
   environment_variables   = var.environment_variables
   source_type             = "CODEPIPELINE"
-  buildspec               = "src/codebuild/deploy_hello_world_lambda_container"
+  buildspec               = "src/codebuild/deploy_hello_world_lambda_container.yaml"
   artifact_type           = "CODEPIPELINE"
   build_image             = "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
   privileged_mode         = true

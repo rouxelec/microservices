@@ -43,7 +43,19 @@ resource "aws_codepipeline" "build" {
       configuration = var.configuration
     }
   }
+stage {
+    name = "Deploy"
 
+    action {
+      name            = "Deploy"
+      category        = "Build"
+      owner           = "AWS"
+      provider        = "CodeBuild"
+      version         = "1"
+      input_artifacts  = ["${var.app}"]
+      configuration = var.configuration_deploy
+    }
+  }
     stage {
     name = "Test"
 
@@ -59,17 +71,5 @@ resource "aws_codepipeline" "build" {
       configuration = var.configuration_test
     }
   }
-    stage {
-    name = "Deploy"
-
-    action {
-      name            = "Deploy"
-      category        = "Deploy"
-      owner           = "AWS"
-      provider        = "CodeBuild"
-      version         = "1"
-
-      configuration = var.configuration_deploy
-    }
-  }
+    
 }
