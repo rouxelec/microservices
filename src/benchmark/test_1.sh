@@ -17,12 +17,37 @@ SCORE_BEFORE_EC2=$(aws dynamodb get-item --table-name Microservice --key '{"User
 SCORE_BEFORE_ECS=$(aws dynamodb get-item --table-name Microservice --key '{"UserId":{"S":"ecs"}}' --region us-east-1  | jq -r '.Item.Score.N')
 SCORE_BEFORE_LC=$(aws dynamodb get-item --table-name Microservice --key '{"UserId":{"S":"lambda_container"}}' --region us-east-1  | jq -r '.Item.Score.N')
 SCORE_BEFORE_LA=$(aws dynamodb get-item --table-name Microservice --key '{"UserId":{"S":"classic_lambda"}}' --region us-east-1  | jq -r '.Item.Score.N')
-for i in $(seq 1 3000); do
+SLEEP_TIME=0.5
+for i in $(seq 1 1000); do
     curl $URL_EC2 &
     curl $URL_LC &
     curl $URL_ECS &
     curl $URL_LA &
-    sleep 0.3
+    sleep $SLEEP_TIME
+done
+SLEEP_TIME=0.3
+for i in $(seq 1 1000); do
+    curl $URL_EC2 &
+    curl $URL_LC &
+    curl $URL_ECS &
+    curl $URL_LA &
+    sleep $SLEEP_TIME
+done
+SLEEP_TIME=0.2
+for i in $(seq 1 1000); do
+    curl $URL_EC2 &
+    curl $URL_LC &
+    curl $URL_ECS &
+    curl $URL_LA &
+    sleep $SLEEP_TIME
+done
+SLEEP_TIME=0.1
+for i in $(seq 1 1000); do
+    curl $URL_EC2 &
+    curl $URL_LC &
+    curl $URL_ECS &
+    curl $URL_LA &
+    sleep $SLEEP_TIME
 done
 sleep 60
 SCORE_AFTER_EC2=$(aws dynamodb get-item --table-name Microservice --key '{"UserId":{"S":"ec2"}}' --region us-east-1  | jq -r '.Item.Score.N')
