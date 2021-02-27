@@ -236,7 +236,7 @@ module "codebuild_app_lambda_container" {
   trigger_enabled         = false
 }
 
-module "codebuild_deploy_app_ec2" {
+module "codebuild_deploy_app_lc" {
   source                  = "../../modules/codebuild"
   namespace               = var.namespace
   environment_variables   = var.environment_variables
@@ -297,6 +297,7 @@ module "codepipeline_lambda_container" {
   source                  = "../../modules/codepipeline_lambda_container"
   codebuild_role_arn      = module.role.role_arn
   configuration           = { ProjectName = module.codebuild_app_lambda_container.project_name }
+  configuration_deploy    = { ProjectName = module.codebuild_deploy_app_lc.project_name }
   configuration_test      = { ProjectName = module.codebuild_test_lc.project_name }
   ecr_repo                = module.ecr.ecr_img_repo_name
   github_org              = var.github_org
