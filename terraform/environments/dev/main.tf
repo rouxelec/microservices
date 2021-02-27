@@ -241,6 +241,23 @@ module "codebuild_deploy_app_ec2" {
   namespace               = var.namespace
   environment_variables   = var.environment_variables
   source_type             = "CODEPIPELINE"
+  buildspec               = "src/codebuild/deploy_hello_world_lambda_container"
+  artifact_type           = "CODEPIPELINE"
+  build_image             = "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
+  privileged_mode         = true
+  code_build_role_arn     = module.role.role_arn
+  code_build_project_name = "codebuild_deploy_lc"
+  project_name            = var.project_name
+  region                  = var.region
+  account_name            = var.account_name
+  trigger_enabled         = false
+}
+
+module "codebuild_deploy_app_ec2" {
+  source                  = "../../modules/codebuild"
+  namespace               = var.namespace
+  environment_variables   = var.environment_variables
+  source_type             = "CODEPIPELINE"
   buildspec               = "src/codebuild/deploy_hello_world_ec2.yaml"
   artifact_type           = "CODEPIPELINE"
   build_image             = "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
@@ -277,7 +294,7 @@ module "codepipeline_lambda" {
 }
 
 module "codepipeline_lambda_container" {
-  source                  = "../../modules/codepipeline"
+  source                  = "../../modules/codepipeline_lambda_container"
   codebuild_role_arn      = module.role.role_arn
   configuration           = { ProjectName = module.codebuild_app_lambda_container.project_name }
   configuration_test      = { ProjectName = module.codebuild_test_lc.project_name }
