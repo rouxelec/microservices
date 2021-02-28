@@ -1,49 +1,33 @@
-module "codebuild_deploy_app_lc" {
-  source                  = "../codebuild"
-  namespace               = var.namespace
-  source_type             = "CODEPIPELINE"
-  buildspec               = "src/codebuild/deploy_hello_world_lambda_container.yaml"
-  artifact_type           = "CODEPIPELINE"
-  build_image             = "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
-  privileged_mode         = true
-  code_build_role_arn     = var.codebuild_role_arn
-  code_build_project_name = "codebuild_deploy_lc"
-  project_name            = var.project_name
-  region                  = var.region
-  account_name            = var.account_name
-  trigger_enabled         = false
-}
-
-module "codebuild_test_lc" {
+module "codebuild_test_ec2" {
   source                  = "../codebuild"
   namespace               = var.namespace
   source_credential_token = var.github_token
   github_token            = var.github_token
   source_type             = "GITHUB"
   source_location         = "https://github.com/rouxelec/fun_project"
-  buildspec               = "src/codebuild/build_test_lc.yaml"
+  buildspec               = "src/codebuild/build_test_ec2.yaml"
   artifact_type           = "NO_ARTIFACTS"
   private_repository      = "true"
   build_image             = "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
   privileged_mode         = true
   code_build_role_arn     = var.codebuild_role_arn
-  code_build_project_name = "codebuild_test_lc"
+  code_build_project_name = "codebuild_test_ec2"
   project_name            = var.project_name
   region                  = var.region
   account_name            = var.account_name
   trigger_enabled         = true
 }
 
-module "codebuild_app_lambda_container" {
+module "codebuild_deploy_app_ec2" {
   source                  = "../codebuild"
   namespace               = var.namespace
   source_type             = "CODEPIPELINE"
-  buildspec               = "src/codebuild/build_hello_world_lambda_container.yaml"
+  buildspec               = "src/codebuild/deploy_hello_world_ec2.yaml"
   artifact_type           = "CODEPIPELINE"
   build_image             = "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
   privileged_mode         = true
   code_build_role_arn     = var.codebuild_role_arn
-  code_build_project_name = "codebuild_app_lambda_container"
+  code_build_project_name = "codebuild_deploy_app_ec2"
   project_name            = var.project_name
   region                  = var.region
   account_name            = var.account_name
@@ -51,6 +35,7 @@ module "codebuild_app_lambda_container" {
 }
 
 resource "aws_codepipeline" "build" {
+  count    = var.build_enabled ? 1 : 0
   name     = replace("${var.app}-${var.namespace}-${var.region}-${var.account_name}-${var.project_name}-releases", "_", "-")
   role_arn = var.codebuild_role_arn
 
@@ -78,6 +63,18 @@ resource "aws_codepipeline" "build" {
       }
     }
 
+    # action {
+    #   name             = "Base_img_source"
+    #   category         = "Source"
+    #   owner            = "AWS"
+    #   provider         = "ECR"
+    #   version          = "1"
+    #   output_artifacts = ["source_output"]
+    #   configuration = {
+    #     RepositoryName = "${var.ecr_repo}"
+    #   }
+    # }
+
   }
 
   stage {
@@ -92,22 +89,10 @@ resource "aws_codepipeline" "build" {
       output_artifacts = var.output_artifacts
       version          = "1"
 
-      configuration = { ProjectName = module.codebuild_app_lambda_container.project_name }
+      configuration = { ProjectName =module.codebuild_deploy_app_ec2.project_name}
     }
   }
-stage {
-    name = "Deploy"
 
-    action {
-      name            = "Deploy"
-      category        = "Build"
-      owner           = "AWS"
-      provider        = "CodeBuild"
-      version         = "1"
-      input_artifacts  = ["${var.app}"]
-      configuration = { ProjectName = module.codebuild_deploy_app_lc.project_name }
-    }
-  }
     stage {
     name = "Test"
 
@@ -120,8 +105,7 @@ stage {
       output_artifacts = ["test"]
       version          = "1"
 
-      configuration       = { ProjectName = module.codebuild_test_lc.project_name }
+      configuration =  { ProjectName =module.codebuild_test_ec2.project_name}
     }
   }
-    
 }

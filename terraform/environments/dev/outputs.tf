@@ -1,12 +1,3 @@
-output "project_name_app" {
-  description = "Project name"
-  value       = module.codebuild_app_lambda.project_name
-}
-
-output "project_id" {
-  description = "Project ID"
-  value       = module.codebuild_app_lambda.project_id
-}
 
 output "role_id" {
   description = "IAM Role ID"

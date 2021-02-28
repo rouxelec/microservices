@@ -6,14 +6,6 @@ variable "output_artifacts" {
   type = list
 }
 
-variable "configuration" {
-  type = map
-}
-
-variable "configuration_test" {
-  type = map
-  default={}
-}
 
 variable "deploy_enabled" {
   type = bool

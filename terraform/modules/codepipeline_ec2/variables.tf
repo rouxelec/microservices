@@ -6,6 +6,14 @@ variable "output_artifacts" {
   type = list
 }
 
+variable "deploy_enabled" {
+  type = bool
+}
+
+variable "build_enabled" {
+  type = bool
+}
+
 variable releases_bucket_id {
   type = string
 }

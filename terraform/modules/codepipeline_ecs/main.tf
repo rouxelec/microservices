@@ -1,56 +1,40 @@
-module "codebuild_deploy_app_lc" {
+module "codebuild_app_docker" {
   source                  = "../codebuild"
   namespace               = var.namespace
   source_type             = "CODEPIPELINE"
-  buildspec               = "src/codebuild/deploy_hello_world_lambda_container.yaml"
+  buildspec               = "src/codebuild/build_hello_world_docker.yaml"
   artifact_type           = "CODEPIPELINE"
   build_image             = "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
   privileged_mode         = true
   code_build_role_arn     = var.codebuild_role_arn
-  code_build_project_name = "codebuild_deploy_lc"
+  code_build_project_name = "codebuild_app_docker"
   project_name            = var.project_name
   region                  = var.region
   account_name            = var.account_name
   trigger_enabled         = false
 }
 
-module "codebuild_test_lc" {
+module "codebuild_test_ecs" {
   source                  = "../codebuild"
   namespace               = var.namespace
   source_credential_token = var.github_token
   github_token            = var.github_token
   source_type             = "GITHUB"
   source_location         = "https://github.com/rouxelec/fun_project"
-  buildspec               = "src/codebuild/build_test_lc.yaml"
+  buildspec               = "src/codebuild/build_test_ecs.yaml"
   artifact_type           = "NO_ARTIFACTS"
   private_repository      = "true"
   build_image             = "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
   privileged_mode         = true
   code_build_role_arn     = var.codebuild_role_arn
-  code_build_project_name = "codebuild_test_lc"
+  code_build_project_name = "codebuild_tes_ecs"
   project_name            = var.project_name
   region                  = var.region
   account_name            = var.account_name
   trigger_enabled         = true
 }
 
-module "codebuild_app_lambda_container" {
-  source                  = "../codebuild"
-  namespace               = var.namespace
-  source_type             = "CODEPIPELINE"
-  buildspec               = "src/codebuild/build_hello_world_lambda_container.yaml"
-  artifact_type           = "CODEPIPELINE"
-  build_image             = "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
-  privileged_mode         = true
-  code_build_role_arn     = var.codebuild_role_arn
-  code_build_project_name = "codebuild_app_lambda_container"
-  project_name            = var.project_name
-  region                  = var.region
-  account_name            = var.account_name
-  trigger_enabled         = false
-}
-
-resource "aws_codepipeline" "build" {
+resource "aws_codepipeline" "deploy" {
   name     = replace("${var.app}-${var.namespace}-${var.region}-${var.account_name}-${var.project_name}-releases", "_", "-")
   role_arn = var.codebuild_role_arn
 
@@ -77,7 +61,6 @@ resource "aws_codepipeline" "build" {
         OutputArtifactFormat = "CODE_ZIP"
       }
     }
-
   }
 
   stage {
@@ -92,23 +75,30 @@ resource "aws_codepipeline" "build" {
       output_artifacts = var.output_artifacts
       version          = "1"
 
-      configuration = { ProjectName = module.codebuild_app_lambda_container.project_name }
+      configuration = { ProjectName =module.codebuild_app_docker.project_name}
     }
   }
-stage {
+
+  stage {
     name = "Deploy"
 
     action {
       name            = "Deploy"
-      category        = "Build"
+      category        = "Deploy"
       owner           = "AWS"
-      provider        = "CodeBuild"
+      provider        = "ECS"
+      input_artifacts = ["imagedefinitions"]
       version         = "1"
-      input_artifacts  = ["${var.app}"]
-      configuration = { ProjectName = module.codebuild_deploy_app_lc.project_name }
+
+      configuration = {
+        ClusterName = var.ecs_cluster_name
+        ServiceName = var.service_name
+        FileName    = "imagedefinitions.json"
+      }
     }
   }
-    stage {
+
+  stage {
     name = "Test"
 
     action {
@@ -120,8 +110,8 @@ stage {
       output_artifacts = ["test"]
       version          = "1"
 
-      configuration       = { ProjectName = module.codebuild_test_lc.project_name }
+      configuration = { ProjectName =module.codebuild_test_ecs.project_name}
     }
   }
-    
+
 }

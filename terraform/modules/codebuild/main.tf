@@ -4,15 +4,6 @@ data "aws_caller_identity" "default" {
 data "aws_region" "default" {
 }
 
-module "label" {
-  source     = "git::https://github.com/cloudposse/terraform-terraform-label.git?ref=tags/0.5.0"
-  namespace  = var.namespace
-  delimiter  = var.delimiter
-  attributes = var.attributes
-  tags       = var.tags
-}
-
-
 resource "aws_codebuild_webhook" "example" {
   count        = var.trigger_enabled ? 1 : 0
   project_name = aws_codebuild_project.default[count.index].name
@@ -46,11 +37,7 @@ resource "aws_codebuild_project" "default" {
   badge_enabled  = var.badge_enabled
   build_timeout  = var.build_timeout
   source_version = var.source_version != "" ? var.source_version : null
-  tags = {
-    for name, value in module.label.tags :
-    name => value
-    if length(value) > 0
-  }
+  tags = var.tags
 
   artifacts {
     type     = var.artifact_type
@@ -96,15 +83,6 @@ resource "aws_codebuild_project" "default" {
         value = var.github_token
       }
     }
-
-    dynamic "environment_variable" {
-      for_each = var.environment_variables
-      content {
-        name  = environment_variable.value.name
-        value = environment_variable.value.value
-      }
-    }
-
   }
 
   source {
