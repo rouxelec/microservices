@@ -189,7 +189,7 @@ module "ecs" {
   replicas                    = 1
   container_name              = "hello-world-container"
   ecs_autoscale_min_instances = 1
-  ecs_autoscale_max_instances = 4
+  ecs_autoscale_max_instances = 10
   app                         = "hello-world"
   environment                 = "dev"
   container_port              = "5000"
@@ -216,7 +216,7 @@ module "ec2" {
   target_group      = module.alb.ec2_target_group_arn
   configbucket_name = module.s3.s3_bucket_config_name
   app_port          = "5000"
-  desired_capacity  = 1
+  desired_capacity  = 2
   project_name      = var.project_name
   account_name      = var.account_name
   namespace         = var.namespace

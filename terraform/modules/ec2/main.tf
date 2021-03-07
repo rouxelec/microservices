@@ -164,7 +164,7 @@ resource "aws_autoscaling_group" "web" {
 
   min_size         = 2
   desired_capacity = var.desired_capacity
-  max_size         = 4
+  max_size         = 10
 
   health_check_type = "ELB"
   target_group_arns = [

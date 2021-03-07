@@ -12,9 +12,9 @@ phases:
       - S3_CONFIG_BUCKET=$(aws ssm get-parameter --name "s3_config_bucket" | jq -r '.Parameter.Value')
       - aws s3 cp --recursive src/ec2/ s3://$S3_CONFIG_BUCKET/temp
       - ASG_NAME=$(aws ssm get-parameter --name "asg_name" | jq -r '.Parameter.Value')
-      - aws autoscaling update-auto-scaling-group --auto-scaling-group-name ${ASG_NAME} --desired-capacity 2
+      - aws autoscaling update-auto-scaling-group --auto-scaling-group-name ${ASG_NAME} --desired-capacity 4
       - sleep 60
-      - aws autoscaling update-auto-scaling-group --auto-scaling-group-name ${ASG_NAME} --desired-capacity 1
+      - aws autoscaling update-auto-scaling-group --auto-scaling-group-name ${ASG_NAME} --desired-capacity 2
   post_build:
     commands:
       - echo Build completed on `date`
