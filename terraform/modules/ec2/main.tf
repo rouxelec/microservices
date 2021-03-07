@@ -162,7 +162,7 @@ resource "aws_cloudwatch_metric_alarm" "web_cpu_alarm_down" {
 resource "aws_autoscaling_group" "web" {
   name = "${aws_launch_configuration.web.name}-asg"
 
-  min_size         = 1
+  min_size         = 2
   desired_capacity = var.desired_capacity
   max_size         = 4
 
