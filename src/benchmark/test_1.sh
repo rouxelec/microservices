@@ -49,11 +49,13 @@ for i in $(seq 1 1000); do
     curl $URL_LA &
     sleep $SLEEP_TIME
 done
+SLEEP_TIME=0.05
 for i in $(seq 1 1000); do
     curl $URL_EC2 &
     curl $URL_LC &
     curl $URL_ECS &
     curl $URL_LA &
+    sleep $SLEEP_TIME
 done
 sleep 60
 SCORE_AFTER_EC2=$(aws dynamodb get-item --table-name Microservice --key '{"UserId":{"S":"ec2"}}' --region us-east-1  | jq -r '.Item.Score.N')
